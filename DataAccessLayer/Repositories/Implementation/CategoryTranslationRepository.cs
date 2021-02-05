@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
+using System.Linq;
 using DataAccessLayer.DataBaseModels;
 using DataAccessLayer.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -9,37 +9,67 @@ namespace DataAccessLayer.Repositories.Implementation
 {
     public class CategoryTranslationRepository : ICrudRepository<CategoryTranslation>
     {
-        private LanguageSkillsDBContext _db;
-        public CategoryTranslationRepository(LanguageSkillsDBContext context)
-        {
-            this._db = context;
-        }
 
-        public IEnumerable<CategoryTranslation> GetAll()
+        public List<CategoryTranslation> GetAll()
         {
-            return _db.CategoryTranslations;
+            using LanguageSkillsDBContext db = new LanguageSkillsDBContext();
+            return db.CategoryTranslations.ToList();
         }
 
         public CategoryTranslation Get(int id)
         {
-            return _db.CategoryTranslations.Find(id);
+            try
+            {
+                using LanguageSkillsDBContext db = new LanguageSkillsDBContext();
+                return db.CategoryTranslations.Find(id);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return new CategoryTranslation();
+            }
         }
 
         public void CreateRange(List<CategoryTranslation> categoryTranslations)
         {
-            _db.CategoryTranslations.AddRange(categoryTranslations);
+            try
+            {
+                using LanguageSkillsDBContext db = new LanguageSkillsDBContext();
+                db.CategoryTranslations.AddRange(categoryTranslations);
+                db.SaveChanges();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
         }
 
         public void Update(CategoryTranslation categoryTranslation)
         {
-            _db.Entry(categoryTranslation).State = EntityState.Modified;
+            try
+            {
+                using LanguageSkillsDBContext db = new LanguageSkillsDBContext();
+                db.Entry(categoryTranslation).State = EntityState.Modified;
+                db.SaveChanges();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
         }
 
         public void Delete(int id)
         {
-            var categoryTranslation = _db.CategoryTranslations.Find(id);
-            if (categoryTranslation != null)
-                _db.CategoryTranslations.Remove(categoryTranslation);
+            try
+            {
+                using LanguageSkillsDBContext db = new LanguageSkillsDBContext();
+                db.CategoryTranslations.Remove(db.CategoryTranslations.Find(id));
+                db.SaveChanges();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
         }
     }
 }

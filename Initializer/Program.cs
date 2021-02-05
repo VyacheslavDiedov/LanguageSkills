@@ -1,5 +1,4 @@
-﻿using System;
-
+﻿
 namespace InitializeDataBase
 {
     class Program

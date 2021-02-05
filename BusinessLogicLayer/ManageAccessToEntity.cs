@@ -1,13 +1,9 @@
-﻿using System;
-using DataAccessLayer.DataBaseModels;
-using DataAccessLayer.Repositories.Implementation;
+﻿using DataAccessLayer.Repositories.Implementation;
 
 namespace BusinessLogicLayer
 {
-    public class UnitOfWork : IDisposable
+    public class ManageAccessToEntity
     {
-        private LanguageSkillsDBContext _db = new LanguageSkillsDBContext();
-
         private CategoryRepository _categoryRepository;
         private CategoryTranslationRepository _categoryTranslationRepository;
         private SubCategoryRepository _subCategoryRepository;
@@ -24,7 +20,7 @@ namespace BusinessLogicLayer
             get
             {
                 if (_categoryRepository == null)
-                    _categoryRepository = new CategoryRepository(_db);
+                    _categoryRepository = new CategoryRepository();
                 return _categoryRepository;
             }
         }
@@ -34,7 +30,7 @@ namespace BusinessLogicLayer
             get
             {
                 if (_categoryTranslationRepository == null)
-                    _categoryTranslationRepository = new CategoryTranslationRepository(_db);
+                    _categoryTranslationRepository = new CategoryTranslationRepository();
                 return _categoryTranslationRepository;
             }
         }
@@ -44,7 +40,7 @@ namespace BusinessLogicLayer
             get
             {
                 if (_subCategoryRepository == null)
-                    _subCategoryRepository = new SubCategoryRepository(_db);
+                    _subCategoryRepository = new SubCategoryRepository();
                 return _subCategoryRepository;
             }
         }
@@ -54,7 +50,7 @@ namespace BusinessLogicLayer
             get
             {
                 if (_subCategoryTranslationRepository == null)
-                    _subCategoryTranslationRepository = new SubCategoryTranslationRepository(_db);
+                    _subCategoryTranslationRepository = new SubCategoryTranslationRepository();
                 return _subCategoryTranslationRepository;
             }
         }
@@ -64,7 +60,7 @@ namespace BusinessLogicLayer
             get
             {
                 if (_wordRepository == null)
-                    _wordRepository = new WordRepository(_db);
+                    _wordRepository = new WordRepository();
                 return _wordRepository;
             }
         }
@@ -74,7 +70,7 @@ namespace BusinessLogicLayer
             get
             {
                 if (_wordTranslationRepository == null)
-                    _wordTranslationRepository = new WordTranslationRepository(_db);
+                    _wordTranslationRepository = new WordTranslationRepository();
                 return _wordTranslationRepository;
             }
         }
@@ -83,7 +79,7 @@ namespace BusinessLogicLayer
             get
             {
                 if (_testRepository == null)
-                    _testRepository = new TestRepository(_db);
+                    _testRepository = new TestRepository();
                 return _testRepository;
             }
         }
@@ -93,7 +89,7 @@ namespace BusinessLogicLayer
             get
             {
                 if (_testTranslationRepository == null)
-                    _testTranslationRepository = new TestTranslationRepository(_db);
+                    _testTranslationRepository = new TestTranslationRepository();
                 return _testTranslationRepository;
             }
         }
@@ -103,7 +99,7 @@ namespace BusinessLogicLayer
             get
             {
                 if (_languageRepository == null)
-                    _languageRepository = new LanguageRepository(_db);
+                    _languageRepository = new LanguageRepository();
                 return _languageRepository;
             }
         }
@@ -113,42 +109,9 @@ namespace BusinessLogicLayer
             get
             {
                 if (_languageTranslationRepository == null)
-                    _languageTranslationRepository = new LanguageTranslationRepository(_db);
+                    _languageTranslationRepository = new LanguageTranslationRepository();
                 return _languageTranslationRepository;
             }
-        }
-
-        public void Save()
-        {
-            try
-            {
-                _db.SaveChanges();
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-            }
-            
-        }
-
-        private bool disposed = false;
-
-        public virtual void Dispose(bool disposing)
-        {
-            if (!this.disposed)
-            {
-                if (disposing)
-                {
-                    _db.Dispose();
-                }
-                this.disposed = true;
-            }
-        }
-
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
         }
     }
 }

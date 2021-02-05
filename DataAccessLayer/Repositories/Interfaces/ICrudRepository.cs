@@ -1,6 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
+using DataAccessLayer.DataBaseModels;
 
 namespace DataAccessLayer.Repositories.Interfaces
 {
@@ -9,8 +9,8 @@ namespace DataAccessLayer.Repositories.Interfaces
             /// <summary>
             /// Get all items from table DB
             /// </summary>
-            /// <returns>All items</returns>
-            IEnumerable<T> GetAll();
+            /// <returns>List of items</returns>
+             List<T> GetAll();
 
             /// <summary>
             /// Get item by Id from table DB
@@ -20,13 +20,13 @@ namespace DataAccessLayer.Repositories.Interfaces
             T Get(int id);
 
             /// <summary>
-            /// Add new range of items
+            /// Add new range of items and save
             /// </summary>
             /// <param name="items">List of items</param>
             void CreateRange(List<T> items);
 
             /// <summary>
-            /// Update the item
+            /// Update the item and save
             /// </summary>
             /// <param name="item">Item to update</param>
             void Update(T item);

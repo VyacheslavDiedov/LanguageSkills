@@ -1,5 +1,4 @@
 ﻿
-
 namespace InitializeDataBase.ViewModels
 {
     public class ParsedData

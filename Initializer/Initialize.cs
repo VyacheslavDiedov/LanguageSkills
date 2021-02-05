@@ -5,16 +5,16 @@ using System.Linq;
 using BusinessLogicLayer;
 using InitializeDataBase.ViewModels;
 using DataAccessLayer.DataBaseModels;
-using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using OfficeOpenXml;
 
 namespace InitializeDataBase
 {
     public class Initialize
     {
-        private UnitOfWork _unitOfWork = new UnitOfWork();
+        private ManageAccessToEntity _manageAccessToEntity = new ManageAccessToEntity();
 
-        private readonly string _pathRoot = Path.GetFullPath(Path.Combine(Directory.GetCurrentDirectory(), @"..\..\..\..\LanguageSkills"));
+        private readonly string _pathRoot = Path.GetFullPath(Path.Combine(
+            Directory.GetCurrentDirectory(), @"..\..\..\..\LanguageSkills"));
         private bool _isData = true;
         private string _tempItem = "";
         private int _countStage = 0;
@@ -78,6 +78,7 @@ namespace InitializeDataBase
             //Get data from file
             List<ParsedData> languageData = ParseData(GetDataFromFile(
                 _pathRoot + _createPath("", "Languages", ".xlsx")));
+
             //Write data to languages
             List<Language> allLanguages = new List<Language>();
             for (int i = 0, j = 0; i < languageData.Count; i++)
@@ -95,13 +96,12 @@ namespace InitializeDataBase
             if (!_isData)
                 return;
             //Save data to dataBase
-            _unitOfWork.Languages.CreateRange(allLanguages);
-            _unitOfWork.Save();
+            _manageAccessToEntity.Languages.CreateRange(allLanguages);
             Console.WriteLine("{0}/8. Languages have added", ++_countStage);
 
 
             //Get all languages
-            allLanguages = _unitOfWork.Languages.GetAll().ToList();
+            allLanguages = _manageAccessToEntity.Languages.GetAll();
             //Write data to language translations
             var allLanguageTranslations = new List<LanguageTranslation>();
             foreach (var language in languageData)
@@ -110,7 +110,6 @@ namespace InitializeDataBase
                 {
                     int idLanguageWord = allLanguages.First(l => l.FullName == language.Word).Id;
                     int idLanguage = allLanguages.First(l => l.ShortName == language.Language).Id;
-
 
                     allLanguageTranslations.Add(new LanguageTranslation()
                     {
@@ -131,8 +130,7 @@ namespace InitializeDataBase
             }
 
             //Save data to dataBase
-            _unitOfWork.LanguageTranslations.CreateRange(allLanguageTranslations);
-            _unitOfWork.Save();
+            _manageAccessToEntity.LanguageTranslations.CreateRange(allLanguageTranslations);
             Console.WriteLine("{0}/8. Language translations have added", ++_countStage);
         }
 
@@ -143,7 +141,7 @@ namespace InitializeDataBase
                 _pathRoot + _createPath("", "TestsNames", ".xlsx")));
 
             //Get all list of language
-            List<Language> allLanguages = _unitOfWork.Languages.GetAll().ToList();
+            List<Language> allLanguages = _manageAccessToEntity.Languages.GetAll();
 
             //Write data to tests
             List<Test> allTests = new List<Test>();
@@ -160,13 +158,12 @@ namespace InitializeDataBase
             if (!_isData)
                 return;
             //Save data to dataBase
-            _unitOfWork.Tests.CreateRange(allTests);
-            _unitOfWork.Save();
+            _manageAccessToEntity.Tests.CreateRange(allTests);
             Console.WriteLine("{0}/8. Tests have added", ++_countStage);
 
 
             //Get all tests
-            allTests = _unitOfWork.Tests.GetAll().ToList();
+            allTests = _manageAccessToEntity.Tests.GetAll();
             List<TestTranslation> allTestTranslations = new List<TestTranslation>();
             //Write test translation
             foreach (var testItem in testData)
@@ -194,8 +191,7 @@ namespace InitializeDataBase
             }
 
             //Save data to dataBase
-            _unitOfWork.TestTranslations.CreateRange(allTestTranslations);
-            _unitOfWork.Save();
+            _manageAccessToEntity.TestTranslations.CreateRange(allTestTranslations);
             Console.WriteLine("{0}/8. Test translations have added", ++_countStage);
         }
 
@@ -206,7 +202,7 @@ namespace InitializeDataBase
                 _pathRoot + _createPath("", "CategoriesRoot", ".xlsx")));
 
             //Get all list of language
-            List<Language> allLanguages = _unitOfWork.Languages.GetAll().ToList();
+            List<Language> allLanguages = _manageAccessToEntity.Languages.GetAll();
 
             //Write data to categories
             List<Category> allCategories = new List<Category>();
@@ -223,13 +219,12 @@ namespace InitializeDataBase
             if (!_isData)
                 return;
             //Save data to dataBase
-            _unitOfWork.Categories.CreateRange(allCategories);
-            _unitOfWork.Save();
+            _manageAccessToEntity.Categories.CreateRange(allCategories);
             Console.WriteLine("{0}/8. Categories have added", ++_countStage);
 
 
             //Get all categories
-            allCategories = _unitOfWork.Categories.GetAll().ToList();
+            allCategories = _manageAccessToEntity.Categories.GetAll();
             List<CategoryTranslation> allCategoryTranslations = new List<CategoryTranslation>();
             //Write category translation
             foreach (var categoryItem in categoryData)
@@ -257,18 +252,17 @@ namespace InitializeDataBase
             }
 
             //Save data to dataBase
-            _unitOfWork.CategoryTranslations.CreateRange(allCategoryTranslations);
-            _unitOfWork.Save();
+            _manageAccessToEntity.CategoryTranslations.CreateRange(allCategoryTranslations);
             Console.WriteLine("{0}/8. Category translations have added", ++_countStage);
         }
 
         private void _writeSubCategoriesToDataBase()
         {
             //Get all categories
-            List<Category> allCategories = _unitOfWork.Categories.GetAll().ToList();
+            List<Category> allCategories = _manageAccessToEntity.Categories.GetAll();
 
             //Get all list of language
-            List<Language> allLanguages = _unitOfWork.Languages.GetAll().ToList();
+            List<Language> allLanguages = _manageAccessToEntity.Languages.GetAll();
 
             foreach (var category in allCategories)
             {
@@ -295,11 +289,10 @@ namespace InitializeDataBase
                 if (!_isData)
                     return;
                 //Save data to dataBase
-                _unitOfWork.SubCategories.CreateRange(allSubCategories);
-                _unitOfWork.Save();
+                _manageAccessToEntity.SubCategories.CreateRange(allSubCategories);
 
                 //Get all subCategories
-                allSubCategories = _unitOfWork.SubCategories.GetAll().ToList();
+                allSubCategories = _manageAccessToEntity.SubCategories.GetAll();
                 List<SubCategoryTranslation> allSubCategoryTranslations = new List<SubCategoryTranslation>();
                 //Write subCategory translation
                 foreach (var subCategoryItem in subCategoryData)
@@ -327,8 +320,7 @@ namespace InitializeDataBase
                 }
 
                 //Save data to dataBase
-                _unitOfWork.SubCategoryTranslations.CreateRange(allSubCategoryTranslations);
-                _unitOfWork.Save();
+                _manageAccessToEntity.SubCategoryTranslations.CreateRange(allSubCategoryTranslations);
             }
             Console.WriteLine("{0}/8. SubCategories and subCategory translation have added", ++_countStage);
         }
@@ -336,13 +328,13 @@ namespace InitializeDataBase
         private void _writeWordsToDataBase()
         {
             //Get all categories
-            List<Category> allCategories = _unitOfWork.Categories.GetAll().ToList();
+            List<Category> allCategories = _manageAccessToEntity.Categories.GetAll();
 
             //Get all subCategories
-            List<SubCategory> allSubCategories = _unitOfWork.SubCategories.GetAll().ToList();
+            List<SubCategory> allSubCategories = _manageAccessToEntity.SubCategories.GetAll();
 
             //Get all list of language
-            List<Language> allLanguages = _unitOfWork.Languages.GetAll().ToList();
+            List<Language> allLanguages = _manageAccessToEntity.Languages.GetAll();
 
             foreach (var category in allCategories)
             {
@@ -371,11 +363,10 @@ namespace InitializeDataBase
                     if (!_isData)
                         return;
                     //Save data to dataBase
-                    _unitOfWork.Words.CreateRange(allWords);
-                    _unitOfWork.Save();
+                    _manageAccessToEntity.Words.CreateRange(allWords);
 
                     //Get all words
-                    allWords = _unitOfWork.Words.GetAll().ToList();
+                    allWords = _manageAccessToEntity.Words.GetAll();
                     List<WordTranslation> allWordTranslations = new List<WordTranslation>();
 
                     //Write subCategory translation
@@ -407,8 +398,7 @@ namespace InitializeDataBase
                     }
 
                     //Save data to dataBase
-                    _unitOfWork.WordTranslations.CreateRange(allWordTranslations);
-                    _unitOfWork.Save();
+                    _manageAccessToEntity.WordTranslations.CreateRange(allWordTranslations);
                 }
             }
             Console.WriteLine("{0}/8. Words and word translations have added", ++_countStage);
