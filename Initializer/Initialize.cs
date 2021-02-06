@@ -19,18 +19,43 @@ namespace InitializeDataBase
         private string _tempItem = "";
         private int _countStage = 0;
 
-        private string _createPath(string directoryName, string fileName, string fileExtension)
+        private string _generatePath(string directoryName, string fileName, string fileExtension)
         {
-            return @"\wwwroot\Dictionary\" + directoryName + fileName + fileExtension;
+            //Generate a global path
+            string path = @"\wwwroot\Dictionary\" + directoryName + fileName + fileExtension;
+            return _isFileExist(_pathRoot, path) ? path : null;
+        }
+
+        private bool _isFileExist(string pathRoot, string path)
+        {
+            //Check if the file already exists in the path
+            return File.Exists(pathRoot + path);
         }
 
         public ExcelWorksheet GetDataFromFile(string path)
         {
-            FileInfo fileInfo = new FileInfo(path);
-            ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
-            ExcelPackage package = new ExcelPackage(fileInfo);
-            ExcelWorksheet worksheet = package.Workbook.Worksheets.FirstOrDefault();
-            return worksheet;
+            if (path != null)
+            {
+                try
+                {
+                    FileInfo fileInfo = new FileInfo(path);
+                    ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+                    ExcelPackage package = new ExcelPackage(fileInfo);
+                    ExcelWorksheet worksheet = package.Workbook.Worksheets.FirstOrDefault();
+                    return worksheet;
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                    _isData = false;
+                    return null;
+                }
+            }
+            else
+            {
+                _isData = false;
+                return null;
+            }
         }
 
         public List<ParsedData> ParseData(ExcelWorksheet worksheet)
@@ -43,25 +68,37 @@ namespace InitializeDataBase
                 int rows = worksheet.Dimension.Rows;
                 int columns = worksheet.Dimension.Columns;
 
-                // loop through the worksheet rows and columns
-                for (int i = 2; i <= rows; i++)
+                try
                 {
-                    for (int j = 2; j <= columns; j++)
+                    //Loop through the worksheet rows and columns
+                    //Started counting from two, because the first row has the name of word 
+                    for (int i = 2; i <= rows; i++)
                     {
-                        if (worksheet.Cells[i, j].Value != null && worksheet.Cells[i, 1].Value != null && 
-                            worksheet.Cells[1, j].Value != null)
+                        //Started counting from two, because the first column have the name of language
+                        for (int j = 2; j <= columns; j++)
                         {
-                            var data = new ParsedData
+                            if (worksheet.Cells[i, j].Value != null && worksheet.Cells[i, 1].Value != null &&
+                                worksheet.Cells[1, j].Value != null)
                             {
-                                Word = worksheet.Cells[i, 1].Value.ToString(),
-                                Language = worksheet.Cells[1, j].Value.ToString(),
-                                Translation = worksheet.Cells[i, j].Value.ToString()
-                            };
-                            parsedData.Add(data);
+                                var data = new ParsedData
+                                {
+                                    //Get the word
+                                    Word = worksheet.Cells[i, 1].Value.ToString(),
+                                    //Get the language of word
+                                    Language = worksheet.Cells[1, j].Value.ToString(),
+                                    //Get the translation of word
+                                    Translation = worksheet.Cells[i, j].Value.ToString()
+                                };
+                                parsedData.Add(data);
+                            }
+                            else
+                                break;
                         }
-                        else
-                            break;
                     }
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
                 }
             }
 
@@ -77,7 +114,7 @@ namespace InitializeDataBase
         {
             //Get data from file
             List<ParsedData> languageData = ParseData(GetDataFromFile(
-                _pathRoot + _createPath("", "Languages", ".xlsx")));
+                _pathRoot + _generatePath("", "Languages", ".xlsx")));
 
             //Write data to languages
             List<Language> allLanguages = new List<Language>();
@@ -138,7 +175,7 @@ namespace InitializeDataBase
         {
             //Get data from file
             List<ParsedData> testData = ParseData(GetDataFromFile(
-                _pathRoot + _createPath("", "TestsNames", ".xlsx")));
+                _pathRoot + _generatePath("", "TestsNames", ".xlsx")));
 
             //Get all list of language
             List<Language> allLanguages = _manageAccessToEntity.Languages.GetAll();
@@ -199,7 +236,7 @@ namespace InitializeDataBase
         {
             //Get data from file
             List<ParsedData> categoryData = ParseData(GetDataFromFile(
-                _pathRoot + _createPath("", "CategoriesRoot", ".xlsx")));
+                _pathRoot + _generatePath("", "CategoriesRoot", ".xlsx")));
 
             //Get all list of language
             List<Language> allLanguages = _manageAccessToEntity.Languages.GetAll();
@@ -212,7 +249,7 @@ namespace InitializeDataBase
                 allCategories.Add(new Category()
                 {
                     CategoryName = categoryItem.Word,
-                    CategoryImagePath = _createPath(@"pictures\", categoryItem.Word, ".jpg")
+                    CategoryImagePath = _generatePath(@"pictures\", categoryItem.Word, ".jpg")
             });
             }
 
@@ -268,7 +305,7 @@ namespace InitializeDataBase
             {
                 //Get data from file
                 List<ParsedData> subCategoryData = ParseData(GetDataFromFile(
-                    _pathRoot + _createPath(category.CategoryName + @"\", 
+                    _pathRoot + _generatePath(category.CategoryName + @"\", 
                         category.CategoryName, ".xlsx")));
 
                 //Write data to subCategories
@@ -280,7 +317,7 @@ namespace InitializeDataBase
                     allSubCategories.Add(new SubCategory()
                     {
                         SubCategoryName = subCategoryItem.Word,
-                        SubCategoryImagePath = _createPath(category.CategoryName + @"\pictures\",
+                        SubCategoryImagePath = _generatePath(category.CategoryName + @"\pictures\",
                             subCategoryItem.Word, ".jpg"),
                         CategoryId = category.Id
                 });
@@ -341,7 +378,7 @@ namespace InitializeDataBase
                 foreach (var subCategory in allSubCategories.Where(s => s.CategoryId == category.Id))
                 {
                     //Get data from file
-                    List<ParsedData> wordData = ParseData(GetDataFromFile(_pathRoot + _createPath(
+                    List<ParsedData> wordData = ParseData(GetDataFromFile(_pathRoot + _generatePath(
                             category.CategoryName + @"\" + subCategory.SubCategoryName + @"\",
                             subCategory.SubCategoryName, ".xlsx")));
 
@@ -354,7 +391,7 @@ namespace InitializeDataBase
                         allWords.Add(new Word()
                         {
                             WordName = word.Word,
-                            WordImagePath = _createPath(category.CategoryName + @"\" + subCategory.SubCategoryName 
+                            WordImagePath = _generatePath(category.CategoryName + @"\" + subCategory.SubCategoryName 
                                                         + @"\pictures\", word.Word, ".jpg"),
                             SubCategoryId = subCategory.Id
                         });
@@ -381,7 +418,7 @@ namespace InitializeDataBase
                                 WordTranslationName = word.Translation,
                                 WordId = idWord,
                                 LanguageId = idLanguage,
-                                PronunciationPath = _createPath(category.CategoryName + @"\" + subCategory.SubCategoryName 
+                                PronunciationPath = _generatePath(category.CategoryName + @"\" + subCategory.SubCategoryName 
                                                                 + @"\pronounce\" + word.Language + @"\", 
                                                             word.Word, ".wav"),
                             });
