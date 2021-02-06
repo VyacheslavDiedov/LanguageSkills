@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
+using System.Linq;
 using DataAccessLayer.DataBaseModels;
 using DataAccessLayer.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -9,37 +9,66 @@ namespace DataAccessLayer.Repositories.Implementation
 {
     public class SubCategoryRepository : ICrudRepository<SubCategory>
     {
-        private LanguageSkillsDBContext _db;
-        public SubCategoryRepository(LanguageSkillsDBContext context)
+        public List<SubCategory> GetAll()
         {
-            this._db = context;
-        }
-
-        public IEnumerable<SubCategory> GetAll()
-        {
-            return _db.SubCategories;
+            using LanguageSkillsDBContext db = new LanguageSkillsDBContext();
+            return db.SubCategories.ToList();
         }
 
         public SubCategory Get(int id)
         {
-            return _db.SubCategories.Find(id);
+            try
+            {
+                using LanguageSkillsDBContext db = new LanguageSkillsDBContext();
+                return db.SubCategories.Find(id);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return new SubCategory();
+            }
         }
 
-        public void Create(SubCategory subCategory)
+        public void CreateRange(List<SubCategory> subCategories)
         {
-            _db.SubCategories.Add(subCategory);
+            try
+            {
+                using LanguageSkillsDBContext db = new LanguageSkillsDBContext();
+                db.SubCategories.AddRange(subCategories);
+                db.SaveChanges();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
         }
 
         public void Update(SubCategory subCategory)
         {
-            _db.Entry(subCategory).State = EntityState.Modified;
+            try
+            {
+                using LanguageSkillsDBContext db = new LanguageSkillsDBContext();
+                db.Entry(subCategory).State = EntityState.Modified;
+                db.SaveChanges();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
         }
 
         public void Delete(int id)
         {
-            var subCategory = _db.SubCategories.Find(id);
-            if (subCategory != null)
-                _db.SubCategories.Remove(subCategory);
+            try
+            {
+                using LanguageSkillsDBContext db = new LanguageSkillsDBContext();
+                db.SubCategories.Remove(db.SubCategories.Find(id));
+                db.SaveChanges();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
         }
     }
 }

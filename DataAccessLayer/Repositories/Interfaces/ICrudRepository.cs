@@ -1,15 +1,40 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
+using DataAccessLayer.DataBaseModels;
 
 namespace DataAccessLayer.Repositories.Interfaces
 {
     interface ICrudRepository<T> where T : class
         {
-            IEnumerable<T> GetAll();
+            /// <summary>
+            /// Get all items from table DB
+            /// </summary>
+            /// <returns>List of items</returns>
+             List<T> GetAll();
+
+            /// <summary>
+            /// Get item by Id from table DB
+            /// </summary>
+            /// <param name="id">Item Id</param>
+            /// <returns>Item</returns>
             T Get(int id);
-            void Create(T item);
+
+            /// <summary>
+            /// Add new range of items and save
+            /// </summary>
+            /// <param name="items">List of items</param>
+            void CreateRange(List<T> items);
+
+            /// <summary>
+            /// Update the item and save
+            /// </summary>
+            /// <param name="item">Item to update</param>
             void Update(T item);
+
+            /// <summary>
+            /// Delete item by Id from table DB
+            /// </summary>
+            /// <param name="id">Item Id to delete</param>
             void Delete(int id);
         }
     }

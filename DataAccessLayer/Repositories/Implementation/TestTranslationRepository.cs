@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
+using System.Linq;
 using DataAccessLayer.DataBaseModels;
 using DataAccessLayer.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -9,37 +9,66 @@ namespace DataAccessLayer.Repositories.Implementation
 {
     public class TestTranslationRepository : ICrudRepository<TestTranslation>
     {
-        private LanguageSkillsDBContext _db;
-        public TestTranslationRepository(LanguageSkillsDBContext context)
+        public List<TestTranslation> GetAll()
         {
-            this._db = context;
-        }
-
-        public IEnumerable<TestTranslation> GetAll()
-        {
-            return _db.TestTranslations;
+            using LanguageSkillsDBContext db = new LanguageSkillsDBContext();
+            return db.TestTranslations.ToList();
         }
 
         public TestTranslation Get(int id)
         {
-            return _db.TestTranslations.Find(id);
+            try
+            {
+                using LanguageSkillsDBContext db = new LanguageSkillsDBContext();
+                return db.TestTranslations.Find(id);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return new TestTranslation();
+            }
         }
 
-        public void Create(TestTranslation testTranslation)
+        public void CreateRange(List<TestTranslation> testTranslations)
         {
-            _db.TestTranslations.Add(testTranslation);
+            try
+            {
+                using LanguageSkillsDBContext db = new LanguageSkillsDBContext();
+                db.TestTranslations.AddRange(testTranslations);
+                db.SaveChanges();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
         }
 
         public void Update(TestTranslation testTranslation)
         {
-            _db.Entry(testTranslation).State = EntityState.Modified;
+            try
+            {
+                using LanguageSkillsDBContext db = new LanguageSkillsDBContext();
+                db.Entry(testTranslation).State = EntityState.Modified;
+                db.SaveChanges();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
         }
 
         public void Delete(int id)
         {
-            var testTranslation = _db.TestTranslations.Find(id);
-            if (testTranslation != null)
-                _db.TestTranslations.Remove(testTranslation);
+            try
+            {
+                using LanguageSkillsDBContext db = new LanguageSkillsDBContext();
+                db.TestTranslations.Remove(db.TestTranslations.Find(id));
+                db.SaveChanges();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
         }
     }
 }

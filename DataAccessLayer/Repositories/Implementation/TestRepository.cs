@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
+using System.Linq;
 using DataAccessLayer.DataBaseModels;
 using DataAccessLayer.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -9,37 +9,66 @@ namespace DataAccessLayer.Repositories.Implementation
 {
     public class TestRepository : ICrudRepository<Test>
     {
-        private LanguageSkillsDBContext _db;
-        public TestRepository(LanguageSkillsDBContext context)
+        public List<Test> GetAll()
         {
-            this._db = context;
-        }
-
-        public IEnumerable<Test> GetAll()
-        {
-            return _db.Tests;
+            using LanguageSkillsDBContext db = new LanguageSkillsDBContext();
+            return db.Tests.ToList();
         }
 
         public Test Get(int id)
         {
-            return _db.Tests.Find(id);
+            try
+            {
+                using LanguageSkillsDBContext db = new LanguageSkillsDBContext();
+                return db.Tests.Find(id);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return new Test();
+            }
         }
 
-        public void Create(Test test)
+        public void CreateRange(List<Test> tests)
         {
-            _db.Tests.Add(test);
+            try
+            {
+                using LanguageSkillsDBContext db = new LanguageSkillsDBContext();
+                db.Tests.AddRange(tests);
+                db.SaveChanges();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
         }
 
         public void Update(Test test)
         {
-            _db.Entry(test).State = EntityState.Modified;
+            try
+            {
+                using LanguageSkillsDBContext db = new LanguageSkillsDBContext();
+                db.Entry(test).State = EntityState.Modified;
+                db.SaveChanges();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
         }
 
         public void Delete(int id)
         {
-            var test = _db.Tests.Find(id);
-            if (test != null)
-                _db.Tests.Remove(test);
+            try
+            {
+                using LanguageSkillsDBContext db = new LanguageSkillsDBContext();
+                db.Tests.Remove(db.Tests.Find(id));
+                db.SaveChanges();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
         }
     }
 }

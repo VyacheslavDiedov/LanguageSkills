@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
+using System.Linq;
 using DataAccessLayer.DataBaseModels;
 using DataAccessLayer.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -9,37 +9,62 @@ namespace DataAccessLayer.Repositories.Implementation
 {
     public class CategoryRepository : ICrudRepository<Category>
     {
-        private LanguageSkillsDBContext _db;
-        public CategoryRepository(LanguageSkillsDBContext context)
-        { 
-            this._db = context;
-        }
 
-        public IEnumerable<Category> GetAll()
+        public List<Category> GetAll()
         {
-            return _db.Categories;
+            using LanguageSkillsDBContext db = new LanguageSkillsDBContext();
+            return db.Categories.ToList();
         }
+            
 
         public Category Get(int id)
         {
-            return _db.Categories.Find(id);
+            try
+            {
+                using LanguageSkillsDBContext db = new LanguageSkillsDBContext();
+                return db.Categories.Find(id);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return new Category();
+            }
         }
 
-        public void Create(Category category)
+        public void CreateRange(List<Category> categories)
         {
-            _db.Categories.Add(category);
+            try
+            {
+                using LanguageSkillsDBContext db = new LanguageSkillsDBContext();
+                db.Categories.AddRange(categories);
+                db.SaveChanges();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
         }
 
         public void Update(Category category)
         {
-            _db.Entry(category).State = EntityState.Modified;
+            using LanguageSkillsDBContext db = new LanguageSkillsDBContext();
+            db.Entry(category).State = EntityState.Modified;
+            db.SaveChanges();
         }
 
         public void Delete(int id)
         {
-            var category = _db.Categories.Find(id);
-            if (category != null)
-                _db.Categories.Remove(category);
+            try
+            {
+                using LanguageSkillsDBContext db = new LanguageSkillsDBContext();
+                db.Categories.Remove( db.Categories.Find(id));
+                db.SaveChanges();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
+            
         }
     }
 }

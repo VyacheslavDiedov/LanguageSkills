@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using DataAccessLayer.DataBaseModels;
 using DataAccessLayer.Repositories.Interfaces;
@@ -9,37 +10,66 @@ namespace DataAccessLayer.Repositories.Implementation
 {
     public class WordTranslationRepository : ICrudRepository<WordTranslation>
     {
-        private LanguageSkillsDBContext _db;
-        public WordTranslationRepository(LanguageSkillsDBContext context)
+        public List<WordTranslation> GetAll()
         {
-            this._db = context;
-        }
-
-        public IEnumerable<WordTranslation> GetAll()
-        {
-            return _db.WordTranslations;
+            using LanguageSkillsDBContext db = new LanguageSkillsDBContext();
+            return db.WordTranslations.ToList();
         }
 
         public WordTranslation Get(int id)
         {
-            return _db.WordTranslations.Find(id);
+            try
+            {
+                using LanguageSkillsDBContext db = new LanguageSkillsDBContext();
+                return db.WordTranslations.Find(id);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return new WordTranslation();
+            }
+            
         }
 
-        public void Create(WordTranslation wordTranslation)
+        public void CreateRange(List<WordTranslation> wordTranslations)
         {
-            _db.WordTranslations.Add(wordTranslation);
+            try
+            {
+                using LanguageSkillsDBContext db = new LanguageSkillsDBContext();
+                db.WordTranslations.AddRange(wordTranslations);
+                db.SaveChanges();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
         }
 
         public void Update(WordTranslation wordTranslation)
         {
-            _db.Entry(wordTranslation).State = EntityState.Modified;
+            try
+            {
+                using LanguageSkillsDBContext db = new LanguageSkillsDBContext();
+                db.Entry(wordTranslation).State = EntityState.Modified;
+                db.SaveChanges();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
         }
 
         public void Delete(int id)
         {
-            var wordTranslation = _db.WordTranslations.Find(id);
-            if (wordTranslation != null)
-                _db.WordTranslations.Remove(wordTranslation);
+            try
+            {
+                using LanguageSkillsDBContext db = new LanguageSkillsDBContext();
+                db.WordTranslations.Remove(db.WordTranslations.Find(id));
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
         }
     }
 }

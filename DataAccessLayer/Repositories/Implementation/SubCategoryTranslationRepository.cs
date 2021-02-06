@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
+using System.Linq;
 using DataAccessLayer.DataBaseModels;
 using DataAccessLayer.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -9,37 +9,66 @@ namespace DataAccessLayer.Repositories.Implementation
 {
     public class SubCategoryTranslationRepository : ICrudRepository<SubCategoryTranslation>
     {
-        private LanguageSkillsDBContext _db;
-        public SubCategoryTranslationRepository(LanguageSkillsDBContext context)
+        public List<SubCategoryTranslation> GetAll()
         {
-            this._db = context;
-        }
-
-        public IEnumerable<SubCategoryTranslation> GetAll()
-        {
-            return _db.SubCategoryTranslations;
+            using LanguageSkillsDBContext db = new LanguageSkillsDBContext();
+            return db.SubCategoryTranslations.ToList();
         }
 
         public SubCategoryTranslation Get(int id)
         {
-            return _db.SubCategoryTranslations.Find(id);
+            try
+            {
+                using LanguageSkillsDBContext db = new LanguageSkillsDBContext();
+                return db.SubCategoryTranslations.Find(id);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return new SubCategoryTranslation();
+            }
         }
 
-        public void Create(SubCategoryTranslation subCategoryTranslation)
+        public void CreateRange(List<SubCategoryTranslation> subCategoryTranslations)
         {
-            _db.SubCategoryTranslations.Add(subCategoryTranslation);
+            try
+            {
+                using LanguageSkillsDBContext db = new LanguageSkillsDBContext();
+                db.SubCategoryTranslations.AddRange(subCategoryTranslations);
+                db.SaveChanges();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
         }
 
         public void Update(SubCategoryTranslation subCategoryTranslation)
         {
-            _db.Entry(subCategoryTranslation).State = EntityState.Modified;
+            try
+            {
+                using LanguageSkillsDBContext db = new LanguageSkillsDBContext();
+                db.Entry(subCategoryTranslation).State = EntityState.Modified;
+                db.SaveChanges();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
         }
 
         public void Delete(int id)
         {
-            var subCategoryTranslation = _db.SubCategoryTranslations.Find(id);
-            if (subCategoryTranslation != null)
-                _db.SubCategoryTranslations.Remove(subCategoryTranslation);
+            try
+            {
+                using LanguageSkillsDBContext db = new LanguageSkillsDBContext();
+                db.SubCategoryTranslations.Remove(db.SubCategoryTranslations.Find(id));
+                db.SaveChanges();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
         }
     }
 }

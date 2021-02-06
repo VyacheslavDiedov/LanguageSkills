@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using DataAccessLayer.DataBaseModels;
 using DataAccessLayer.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -7,37 +9,66 @@ namespace DataAccessLayer.Repositories.Implementation
 {
     public class LanguageRepository : ICrudRepository<Language>
     {
-        private LanguageSkillsDBContext _db;
-        public LanguageRepository(LanguageSkillsDBContext context)
+        public List<Language> GetAll()
         {
-            this._db = context;
-        }
-
-        public IEnumerable<Language> GetAll()
-        {
-            return _db.Languages;
+            using LanguageSkillsDBContext db = new LanguageSkillsDBContext();
+            return db.Languages.ToList();
         }
 
         public Language Get(int id)
         {
-            return _db.Languages.Find(id);
+            try
+            {
+                using LanguageSkillsDBContext db = new LanguageSkillsDBContext();
+                return db.Languages.Find(id);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return new Language();
+            }
         }
 
-        public void Create(Language language)
+        public void CreateRange(List<Language> languages)
         {
-            _db.Languages.Add(language);
+            try
+            {
+                using LanguageSkillsDBContext db = new LanguageSkillsDBContext();
+                db.Languages.AddRange(languages);
+                db.SaveChanges();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
         }
 
         public void Update(Language language)
         {
-            _db.Entry(language).State = EntityState.Modified;
+            try
+            {
+                using LanguageSkillsDBContext db = new LanguageSkillsDBContext();
+                db.Entry(language).State = EntityState.Modified;
+                db.SaveChanges();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
         }
 
         public void Delete(int id)
         {
-            var language = _db.Languages.Find(id);
-            if (language != null)
-                _db.Languages.Remove(language);
+            try
+            {
+                using LanguageSkillsDBContext db = new LanguageSkillsDBContext();
+                db.Languages.Remove(db.Languages.Find(id));
+                db.SaveChanges();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
         }
     }
 }
