@@ -11,16 +11,20 @@ namespace DataAccessLayer.Repositories.Implementation
     {
         public List<SubCategory> GetAll()
         {
-            using LanguageSkillsDBContext db = new LanguageSkillsDBContext();
-            return db.SubCategories.ToList();
+            using (LanguageSkillsDBContext db = new LanguageSkillsDBContext())
+            {
+                return db.SubCategories.ToList();
+            }
         }
 
         public SubCategory Get(int id)
         {
             try
             {
-                using LanguageSkillsDBContext db = new LanguageSkillsDBContext();
-                return db.SubCategories.Find(id);
+                using (LanguageSkillsDBContext db = new LanguageSkillsDBContext())
+                {
+                    return db.SubCategories.Find(id);
+                }
             }
             catch (Exception e)
             {
@@ -33,9 +37,11 @@ namespace DataAccessLayer.Repositories.Implementation
         {
             try
             {
-                using LanguageSkillsDBContext db = new LanguageSkillsDBContext();
-                db.SubCategories.AddRange(subCategories);
-                db.SaveChanges();
+                using (LanguageSkillsDBContext db = new LanguageSkillsDBContext())
+                {
+                    db.SubCategories.AddRange(subCategories);
+                    db.SaveChanges();
+                }
             }
             catch (Exception e)
             {
@@ -47,9 +53,11 @@ namespace DataAccessLayer.Repositories.Implementation
         {
             try
             {
-                using LanguageSkillsDBContext db = new LanguageSkillsDBContext();
-                db.Entry(subCategory).State = EntityState.Modified;
-                db.SaveChanges();
+                using (LanguageSkillsDBContext db = new LanguageSkillsDBContext())
+                {
+                    db.Entry(subCategory).State = EntityState.Modified;
+                    db.SaveChanges();
+                }
             }
             catch (Exception e)
             {
@@ -61,9 +69,11 @@ namespace DataAccessLayer.Repositories.Implementation
         {
             try
             {
-                using LanguageSkillsDBContext db = new LanguageSkillsDBContext();
-                db.SubCategories.Remove(db.SubCategories.Find(id));
-                db.SaveChanges();
+                using (LanguageSkillsDBContext db = new LanguageSkillsDBContext())
+                {
+                    db.SubCategories.Remove(db.SubCategories.Find(id));
+                    db.SaveChanges();
+                }
             }
             catch (Exception e)
             {

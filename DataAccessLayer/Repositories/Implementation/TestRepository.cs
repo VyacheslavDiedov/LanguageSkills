@@ -11,16 +11,20 @@ namespace DataAccessLayer.Repositories.Implementation
     {
         public List<Test> GetAll()
         {
-            using LanguageSkillsDBContext db = new LanguageSkillsDBContext();
-            return db.Tests.ToList();
+            using (LanguageSkillsDBContext db = new LanguageSkillsDBContext())
+            {
+                return db.Tests.ToList();
+            }
         }
 
         public Test Get(int id)
         {
             try
             {
-                using LanguageSkillsDBContext db = new LanguageSkillsDBContext();
-                return db.Tests.Find(id);
+                using (LanguageSkillsDBContext db = new LanguageSkillsDBContext())
+                {
+                    return db.Tests.Find(id);
+                }
             }
             catch (Exception e)
             {
@@ -33,9 +37,11 @@ namespace DataAccessLayer.Repositories.Implementation
         {
             try
             {
-                using LanguageSkillsDBContext db = new LanguageSkillsDBContext();
-                db.Tests.AddRange(tests);
-                db.SaveChanges();
+                using (LanguageSkillsDBContext db = new LanguageSkillsDBContext())
+                {
+                    db.Tests.AddRange(tests);
+                    db.SaveChanges();
+                }
             }
             catch (Exception e)
             {
@@ -47,9 +53,11 @@ namespace DataAccessLayer.Repositories.Implementation
         {
             try
             {
-                using LanguageSkillsDBContext db = new LanguageSkillsDBContext();
-                db.Entry(test).State = EntityState.Modified;
-                db.SaveChanges();
+                using (LanguageSkillsDBContext db = new LanguageSkillsDBContext())
+                {
+                    db.Entry(test).State = EntityState.Modified;
+                    db.SaveChanges();
+                }
             }
             catch (Exception e)
             {
@@ -61,9 +69,11 @@ namespace DataAccessLayer.Repositories.Implementation
         {
             try
             {
-                using LanguageSkillsDBContext db = new LanguageSkillsDBContext();
-                db.Tests.Remove(db.Tests.Find(id));
-                db.SaveChanges();
+                using (LanguageSkillsDBContext db = new LanguageSkillsDBContext())
+                {
+                    db.Tests.Remove(db.Tests.Find(id));
+                    db.SaveChanges();
+                }
             }
             catch (Exception e)
             {

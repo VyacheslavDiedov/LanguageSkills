@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using DataAccessLayer.DataBaseModels;
 using DataAccessLayer.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -12,16 +11,20 @@ namespace DataAccessLayer.Repositories.Implementation
     {
         public List<WordTranslation> GetAll()
         {
-            using LanguageSkillsDBContext db = new LanguageSkillsDBContext();
-            return db.WordTranslations.ToList();
+            using (LanguageSkillsDBContext db = new LanguageSkillsDBContext())
+            {
+                return db.WordTranslations.ToList();
+            }
         }
 
         public WordTranslation Get(int id)
         {
             try
             {
-                using LanguageSkillsDBContext db = new LanguageSkillsDBContext();
-                return db.WordTranslations.Find(id);
+                using (LanguageSkillsDBContext db = new LanguageSkillsDBContext())
+                {
+                    return db.WordTranslations.Find(id);
+                }
             }
             catch (Exception e)
             {
@@ -35,9 +38,11 @@ namespace DataAccessLayer.Repositories.Implementation
         {
             try
             {
-                using LanguageSkillsDBContext db = new LanguageSkillsDBContext();
-                db.WordTranslations.AddRange(wordTranslations);
-                db.SaveChanges();
+                using (LanguageSkillsDBContext db = new LanguageSkillsDBContext())
+                {
+                    db.WordTranslations.AddRange(wordTranslations);
+                    db.SaveChanges();
+                }
             }
             catch (Exception e)
             {
@@ -49,9 +54,11 @@ namespace DataAccessLayer.Repositories.Implementation
         {
             try
             {
-                using LanguageSkillsDBContext db = new LanguageSkillsDBContext();
-                db.Entry(wordTranslation).State = EntityState.Modified;
-                db.SaveChanges();
+                using (LanguageSkillsDBContext db = new LanguageSkillsDBContext())
+                {
+                    db.Entry(wordTranslation).State = EntityState.Modified;
+                    db.SaveChanges();
+                }
             }
             catch (Exception e)
             {
@@ -63,8 +70,10 @@ namespace DataAccessLayer.Repositories.Implementation
         {
             try
             {
-                using LanguageSkillsDBContext db = new LanguageSkillsDBContext();
-                db.WordTranslations.Remove(db.WordTranslations.Find(id));
+                using (LanguageSkillsDBContext db = new LanguageSkillsDBContext())
+                {
+                    db.WordTranslations.Remove(db.WordTranslations.Find(id));
+                }
             }
             catch (Exception e)
             {

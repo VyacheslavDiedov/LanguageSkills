@@ -11,16 +11,20 @@ namespace DataAccessLayer.Repositories.Implementation
     {
         public List<TestTranslation> GetAll()
         {
-            using LanguageSkillsDBContext db = new LanguageSkillsDBContext();
-            return db.TestTranslations.ToList();
+            using (LanguageSkillsDBContext db = new LanguageSkillsDBContext())
+            {
+                return db.TestTranslations.ToList();
+            }
         }
 
         public TestTranslation Get(int id)
         {
             try
             {
-                using LanguageSkillsDBContext db = new LanguageSkillsDBContext();
-                return db.TestTranslations.Find(id);
+                using (LanguageSkillsDBContext db = new LanguageSkillsDBContext())
+                {
+                    return db.TestTranslations.Find(id);
+                }
             }
             catch (Exception e)
             {
@@ -33,9 +37,11 @@ namespace DataAccessLayer.Repositories.Implementation
         {
             try
             {
-                using LanguageSkillsDBContext db = new LanguageSkillsDBContext();
-                db.TestTranslations.AddRange(testTranslations);
-                db.SaveChanges();
+                using (LanguageSkillsDBContext db = new LanguageSkillsDBContext())
+                {
+                    db.TestTranslations.AddRange(testTranslations);
+                    db.SaveChanges();
+                }
             }
             catch (Exception e)
             {
@@ -47,9 +53,11 @@ namespace DataAccessLayer.Repositories.Implementation
         {
             try
             {
-                using LanguageSkillsDBContext db = new LanguageSkillsDBContext();
-                db.Entry(testTranslation).State = EntityState.Modified;
-                db.SaveChanges();
+                using (LanguageSkillsDBContext db = new LanguageSkillsDBContext())
+                {
+                    db.Entry(testTranslation).State = EntityState.Modified;
+                    db.SaveChanges();
+                }
             }
             catch (Exception e)
             {
@@ -61,9 +69,11 @@ namespace DataAccessLayer.Repositories.Implementation
         {
             try
             {
-                using LanguageSkillsDBContext db = new LanguageSkillsDBContext();
-                db.TestTranslations.Remove(db.TestTranslations.Find(id));
-                db.SaveChanges();
+                using (LanguageSkillsDBContext db = new LanguageSkillsDBContext())
+                {
+                    db.TestTranslations.Remove(db.TestTranslations.Find(id));
+                    db.SaveChanges();
+                }
             }
             catch (Exception e)
             {

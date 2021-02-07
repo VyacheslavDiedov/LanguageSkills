@@ -9,11 +9,12 @@ namespace DataAccessLayer.Repositories.Implementation
 {
     public class CategoryRepository : ICrudRepository<Category>
     {
-
         public List<Category> GetAll()
         {
-            using LanguageSkillsDBContext db = new LanguageSkillsDBContext();
-            return db.Categories.ToList();
+            using (LanguageSkillsDBContext db = new LanguageSkillsDBContext())
+            {
+                return db.Categories.ToList();
+            }
         }
             
 
@@ -21,8 +22,10 @@ namespace DataAccessLayer.Repositories.Implementation
         {
             try
             {
-                using LanguageSkillsDBContext db = new LanguageSkillsDBContext();
-                return db.Categories.Find(id);
+                using (LanguageSkillsDBContext db = new LanguageSkillsDBContext())
+                {
+                    return db.Categories.Find(id);
+                }
             }
             catch (Exception e)
             {
@@ -35,9 +38,11 @@ namespace DataAccessLayer.Repositories.Implementation
         {
             try
             {
-                using LanguageSkillsDBContext db = new LanguageSkillsDBContext();
-                db.Categories.AddRange(categories);
-                db.SaveChanges();
+                using (LanguageSkillsDBContext db = new LanguageSkillsDBContext())
+                {
+                    db.Categories.AddRange(categories);
+                    db.SaveChanges();
+                }
             }
             catch (Exception e)
             {
@@ -47,24 +52,27 @@ namespace DataAccessLayer.Repositories.Implementation
 
         public void Update(Category category)
         {
-            using LanguageSkillsDBContext db = new LanguageSkillsDBContext();
-            db.Entry(category).State = EntityState.Modified;
-            db.SaveChanges();
+            using (LanguageSkillsDBContext db = new LanguageSkillsDBContext())
+            {
+                db.Entry(category).State = EntityState.Modified;
+                db.SaveChanges();
+            }
         }
 
         public void Delete(int id)
         {
             try
             {
-                using LanguageSkillsDBContext db = new LanguageSkillsDBContext();
-                db.Categories.Remove( db.Categories.Find(id));
-                db.SaveChanges();
+                using (LanguageSkillsDBContext db = new LanguageSkillsDBContext())
+                {
+                    db.Categories.Remove(db.Categories.Find(id));
+                    db.SaveChanges();
+                }
             }
             catch (Exception e)
             {
                 Console.WriteLine(e);
             }
-            
         }
     }
 }
