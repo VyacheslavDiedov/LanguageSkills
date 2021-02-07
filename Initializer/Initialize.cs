@@ -14,7 +14,7 @@ namespace InitializeDataBase
         private ManageAccessToEntity _manageAccessToEntity = new ManageAccessToEntity();
 
         private readonly string _pathRoot = Path.GetFullPath(Path.Combine(
-            Directory.GetCurrentDirectory(), @"..\..\..\..\LanguageSkills"));
+            Directory.GetCurrentDirectory(), @"..\..\..\..\LanguageSkills\wwwroot"));
         private bool _isData = true;
         private string _tempItem = "";
         private int _countStage = 0;
@@ -22,14 +22,27 @@ namespace InitializeDataBase
         private string _generatePath(string directoryName, string fileName, string fileExtension)
         {
             //Generate a global path
-            string path = @"\wwwroot\Dictionary\" + directoryName + fileName + fileExtension;
-            return _isFileExist(_pathRoot, path) ? path : null;
+            string path = @"\Dictionary\" + directoryName + fileName + fileExtension;
+            return _isFileExist(path) ? path : 
+                _removeSpaces(@"\Dictionary\" + directoryName, fileName + fileExtension);
         }
 
-        private bool _isFileExist(string pathRoot, string path)
+        private bool _isFileExist(string path)
         {
-            //Check if the file already exists in the path
-            return File.Exists(pathRoot + path);
+            return File.Exists(_pathRoot + path);
+        }
+
+        private string _removeSpaces(string path, string fileName)
+        {
+            if (_isFileExist(path + fileName.Replace(" ", "")))
+            {
+                return path + fileName.Replace(" ", "");
+            }
+            else
+            {
+                Console.WriteLine("File isn't exist " + _pathRoot + path + fileName);
+                return null;
+            }
         }
 
         public ExcelWorksheet GetDataFromFile(string path)
@@ -151,8 +164,8 @@ namespace InitializeDataBase
                     allLanguageTranslations.Add(new LanguageTranslation()
                     {
                         LanguageTranslationName = language.Translation,
-                        LanguageWordId = idLanguageWord,
-                        LanguageId = idLanguage
+                        LanguageInitialId = idLanguageWord,
+                        LanguageToTranslateId = idLanguage
                     });
                 }
                 catch (InvalidOperationException)
