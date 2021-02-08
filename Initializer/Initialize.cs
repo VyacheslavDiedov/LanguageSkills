@@ -143,7 +143,7 @@ namespace InitializeDataBase
                 }
             }
 
-            if (!_isData)
+            if (!_isData && !new HashSet<Language>(allLanguages).SetEquals(_manageAccessToEntity.Languages.GetAll()))
                 return;
             //Save data to dataBase
             _manageAccessToEntity.Languages.CreateRange(allLanguages);
@@ -205,7 +205,7 @@ namespace InitializeDataBase
                 });
             }
 
-            if (!_isData)
+            if (!_isData && !new HashSet<Language>(allLanguages).SetEquals(_manageAccessToEntity.Languages.GetAll()))
                 return;
             //Save data to dataBase
             _manageAccessToEntity.Tests.CreateRange(allTests);
@@ -266,7 +266,7 @@ namespace InitializeDataBase
             });
             }
 
-            if (!_isData)
+            if (!_isData && !new HashSet<Language>(allLanguages).SetEquals(_manageAccessToEntity.Languages.GetAll()))
                 return;
             //Save data to dataBase
             _manageAccessToEntity.Categories.CreateRange(allCategories);
@@ -336,7 +336,7 @@ namespace InitializeDataBase
                 });
                 }
 
-                if (!_isData)
+                if (!_isData && !new HashSet<Language>(allLanguages).SetEquals(_manageAccessToEntity.Languages.GetAll()))
                     return;
                 //Save data to dataBase
                 _manageAccessToEntity.SubCategories.CreateRange(allSubCategories);
@@ -410,7 +410,7 @@ namespace InitializeDataBase
                         });
                     }
 
-                    if (!_isData)
+                    if (!_isData && !new HashSet<Language>(allLanguages).SetEquals(_manageAccessToEntity.Languages.GetAll()))
                         return;
                     //Save data to dataBase
                     _manageAccessToEntity.Words.CreateRange(allWords);
