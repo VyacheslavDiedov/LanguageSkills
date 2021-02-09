@@ -2,45 +2,52 @@
 using System.Collections.Generic;
 using System.Linq;
 using DataAccessLayer.DataBaseModels;
-using DataAccessLayer.Repositories.Interfaces;
+using DataAccessLayer.Crud.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
-namespace DataAccessLayer.Repositories.Implementation
+namespace DataAccessLayer.Crud.Implementation
 {
-    public class WordTranslationRepository : ICrudRepository<WordTranslation>
+    public class SubCategoryCrud : ICrudDictionary<SubCategory>
     {
-        public List<WordTranslation> GetAll()
-        {
-            using (LanguageSkillsDBContext db = new LanguageSkillsDBContext())
-            {
-                return db.WordTranslations.ToList();
-            }
-        }
-
-        public WordTranslation Get(int id)
+        public List<SubCategory> GetAll()
         {
             try
             {
                 using (LanguageSkillsDBContext db = new LanguageSkillsDBContext())
                 {
-                    return db.WordTranslations.Find(id);
+                    return db.SubCategories.ToList();
                 }
             }
             catch (Exception e)
             {
                 Console.WriteLine(e);
-                return new WordTranslation();
+                return new List<SubCategory>();
             }
-            
         }
 
-        public void CreateRange(List<WordTranslation> wordTranslations)
+        public SubCategory Get(int id)
         {
             try
             {
                 using (LanguageSkillsDBContext db = new LanguageSkillsDBContext())
                 {
-                    db.WordTranslations.AddRange(wordTranslations);
+                    return db.SubCategories.Find(id);
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return new SubCategory();
+            }
+        }
+
+        public void CreateRange(List<SubCategory> subCategories)
+        {
+            try
+            {
+                using (LanguageSkillsDBContext db = new LanguageSkillsDBContext())
+                {
+                    db.SubCategories.AddRange(subCategories);
                     db.SaveChanges();
                 }
             }
@@ -50,13 +57,13 @@ namespace DataAccessLayer.Repositories.Implementation
             }
         }
 
-        public void Update(WordTranslation wordTranslation)
+        public void Update(SubCategory subCategory)
         {
             try
             {
                 using (LanguageSkillsDBContext db = new LanguageSkillsDBContext())
                 {
-                    db.Entry(wordTranslation).State = EntityState.Modified;
+                    db.Entry(subCategory).State = EntityState.Modified;
                     db.SaveChanges();
                 }
             }
@@ -72,7 +79,8 @@ namespace DataAccessLayer.Repositories.Implementation
             {
                 using (LanguageSkillsDBContext db = new LanguageSkillsDBContext())
                 {
-                    db.WordTranslations.Remove(db.WordTranslations.Find(id));
+                    db.SubCategories.Remove(db.SubCategories.Find(id));
+                    db.SaveChanges();
                 }
             }
             catch (Exception e)

@@ -2,44 +2,52 @@
 using System.Collections.Generic;
 using System.Linq;
 using DataAccessLayer.DataBaseModels;
-using DataAccessLayer.Repositories.Interfaces;
+using DataAccessLayer.Crud.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
-namespace DataAccessLayer.Repositories.Implementation
+namespace DataAccessLayer.Crud.Implementation
 {
-    public class SubCategoryRepository : ICrudRepository<SubCategory>
+    public class TestCrud : ICrudDictionary<Test>
     {
-        public List<SubCategory> GetAll()
-        {
-            using (LanguageSkillsDBContext db = new LanguageSkillsDBContext())
-            {
-                return db.SubCategories.ToList();
-            }
-        }
-
-        public SubCategory Get(int id)
+        public List<Test> GetAll()
         {
             try
             {
                 using (LanguageSkillsDBContext db = new LanguageSkillsDBContext())
                 {
-                    return db.SubCategories.Find(id);
+                    return db.Tests.ToList();
                 }
             }
             catch (Exception e)
             {
                 Console.WriteLine(e);
-                return new SubCategory();
+                return new List<Test>();
             }
         }
 
-        public void CreateRange(List<SubCategory> subCategories)
+        public Test Get(int id)
         {
             try
             {
                 using (LanguageSkillsDBContext db = new LanguageSkillsDBContext())
                 {
-                    db.SubCategories.AddRange(subCategories);
+                    return db.Tests.Find(id);
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return new Test();
+            }
+        }
+
+        public void CreateRange(List<Test> tests)
+        {
+            try
+            {
+                using (LanguageSkillsDBContext db = new LanguageSkillsDBContext())
+                {
+                    db.Tests.AddRange(tests);
                     db.SaveChanges();
                 }
             }
@@ -49,13 +57,13 @@ namespace DataAccessLayer.Repositories.Implementation
             }
         }
 
-        public void Update(SubCategory subCategory)
+        public void Update(Test test)
         {
             try
             {
                 using (LanguageSkillsDBContext db = new LanguageSkillsDBContext())
                 {
-                    db.Entry(subCategory).State = EntityState.Modified;
+                    db.Entry(test).State = EntityState.Modified;
                     db.SaveChanges();
                 }
             }
@@ -71,7 +79,7 @@ namespace DataAccessLayer.Repositories.Implementation
             {
                 using (LanguageSkillsDBContext db = new LanguageSkillsDBContext())
                 {
-                    db.SubCategories.Remove(db.SubCategories.Find(id));
+                    db.Tests.Remove(db.Tests.Find(id));
                     db.SaveChanges();
                 }
             }

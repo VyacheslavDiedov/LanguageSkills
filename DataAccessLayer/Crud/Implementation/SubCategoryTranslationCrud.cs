@@ -2,18 +2,26 @@
 using System.Collections.Generic;
 using System.Linq;
 using DataAccessLayer.DataBaseModels;
-using DataAccessLayer.Repositories.Interfaces;
+using DataAccessLayer.Crud.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
-namespace DataAccessLayer.Repositories.Implementation
+namespace DataAccessLayer.Crud.Implementation
 {
-    public class SubCategoryTranslationRepository : ICrudRepository<SubCategoryTranslation>
+    public class SubCategoryTranslationCrud : ICrudDictionary<SubCategoryTranslation>
     {
         public List<SubCategoryTranslation> GetAll()
         {
-            using (LanguageSkillsDBContext db = new LanguageSkillsDBContext())
+            try
             {
-                return db.SubCategoryTranslations.ToList();
+                using (LanguageSkillsDBContext db = new LanguageSkillsDBContext())
+                {
+                    return db.SubCategoryTranslations.ToList();
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return new List<SubCategoryTranslation>();
             }
         }
 

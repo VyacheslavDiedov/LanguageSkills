@@ -1,10 +1,8 @@
 ﻿using System.Collections.Generic;
-using System.Threading.Tasks;
-using DataAccessLayer.DataBaseModels;
 
-namespace DataAccessLayer.Repositories.Interfaces
+namespace DataAccessLayer.Crud.Interfaces
 {
-    interface ICrudRepository<T> where T : class
+    interface ICrudDictionary<T> where T : class
         {
             /// <summary>
             /// Get all items from table DB

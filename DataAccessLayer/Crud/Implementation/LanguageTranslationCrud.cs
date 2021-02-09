@@ -2,44 +2,52 @@
 using System.Collections.Generic;
 using System.Linq;
 using DataAccessLayer.DataBaseModels;
-using DataAccessLayer.Repositories.Interfaces;
+using DataAccessLayer.Crud.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
-namespace DataAccessLayer.Repositories.Implementation
+namespace DataAccessLayer.Crud.Implementation
 {
-    public class TestRepository : ICrudRepository<Test>
+    public class LanguageTranslationCrud : ICrudDictionary<LanguageTranslation>
     {
-        public List<Test> GetAll()
-        {
-            using (LanguageSkillsDBContext db = new LanguageSkillsDBContext())
-            {
-                return db.Tests.ToList();
-            }
-        }
-
-        public Test Get(int id)
+        public List<LanguageTranslation> GetAll()
         {
             try
             {
                 using (LanguageSkillsDBContext db = new LanguageSkillsDBContext())
                 {
-                    return db.Tests.Find(id);
+                    return db.LanguageTranslations.ToList();
                 }
             }
             catch (Exception e)
             {
                 Console.WriteLine(e);
-                return new Test();
+                return new List<LanguageTranslation>();
             }
         }
 
-        public void CreateRange(List<Test> tests)
+        public LanguageTranslation Get(int id)
         {
             try
             {
                 using (LanguageSkillsDBContext db = new LanguageSkillsDBContext())
                 {
-                    db.Tests.AddRange(tests);
+                    return db.LanguageTranslations.Find(id);
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return new LanguageTranslation();
+            }
+        }
+
+        public void CreateRange(List<LanguageTranslation> languageTranslations)
+        {
+            try
+            {
+                using (LanguageSkillsDBContext db = new LanguageSkillsDBContext())
+                {
+                    db.LanguageTranslations.AddRange(languageTranslations);
                     db.SaveChanges();
                 }
             }
@@ -49,13 +57,13 @@ namespace DataAccessLayer.Repositories.Implementation
             }
         }
 
-        public void Update(Test test)
+        public void Update(LanguageTranslation languageTranslation)
         {
             try
             {
                 using (LanguageSkillsDBContext db = new LanguageSkillsDBContext())
                 {
-                    db.Entry(test).State = EntityState.Modified;
+                    db.Entry(languageTranslation).State = EntityState.Modified;
                     db.SaveChanges();
                 }
             }
@@ -71,7 +79,7 @@ namespace DataAccessLayer.Repositories.Implementation
             {
                 using (LanguageSkillsDBContext db = new LanguageSkillsDBContext())
                 {
-                    db.Tests.Remove(db.Tests.Find(id));
+                    db.LanguageTranslations.Remove(db.LanguageTranslations.Find(id));
                     db.SaveChanges();
                 }
             }
