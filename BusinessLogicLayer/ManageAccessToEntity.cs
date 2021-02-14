@@ -1,4 +1,4 @@
-﻿using DataAccessLayer.Crud.Implementation;
+﻿using DataAccessLayer.Crud;
 
 namespace BusinessLogicLayer
 {
