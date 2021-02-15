@@ -9,7 +9,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BusinessLogicLayer", "Busin
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataAccessLayer", "DataAccessLayer\DataAccessLayer.csproj", "{623CD92B-B5EF-4DE0-8A5A-4030DE9A0B87}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InitializeDataBase", "Initializer\InitializeDataBase.csproj", "{ED4A7FFC-5733-4FE9-9059-39A5C2BF3355}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InitializeDataBase", "Initializer\InitializeDataBase.csproj", "{ED4A7FFC-5733-4FE9-9059-39A5C2BF3355}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LanguageSkills.Test", "LanguageSkills.Test\LanguageSkills.Test.csproj", "{F8A7B924-627F-4C1F-A00D-DF3EA08FBEFD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{ED4A7FFC-5733-4FE9-9059-39A5C2BF3355}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{ED4A7FFC-5733-4FE9-9059-39A5C2BF3355}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{ED4A7FFC-5733-4FE9-9059-39A5C2BF3355}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F8A7B924-627F-4C1F-A00D-DF3EA08FBEFD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F8A7B924-627F-4C1F-A00D-DF3EA08FBEFD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F8A7B924-627F-4C1F-A00D-DF3EA08FBEFD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F8A7B924-627F-4C1F-A00D-DF3EA08FBEFD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
