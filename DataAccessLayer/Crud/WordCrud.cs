@@ -41,7 +41,7 @@ namespace DataAccessLayer.Crud
             {
                 using (LanguageSkillsDBContext db = new LanguageSkillsDBContext())
                 {
-                    return db.Words.Find(id);
+                    return db.Words.FirstOrDefault(w => w.Id == id);
                 }
             }
             catch (Exception e)
@@ -104,8 +104,12 @@ namespace DataAccessLayer.Crud
             {
                 using (LanguageSkillsDBContext db = new LanguageSkillsDBContext())
                 {
-                    db.Words.Remove(db.Words.Find(id));
-                    db.SaveChanges();
+                    Word word = db.Words.FirstOrDefault(w => w.Id == id);
+                    if (word != null)
+                    {
+                        db.Words.Remove(word);
+                        db.SaveChanges();
+                    }
                 }
             }
             catch (Exception e)

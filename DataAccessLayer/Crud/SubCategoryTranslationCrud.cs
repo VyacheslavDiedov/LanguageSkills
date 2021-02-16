@@ -41,7 +41,7 @@ namespace DataAccessLayer.Crud
             {
                 using (LanguageSkillsDBContext db = new LanguageSkillsDBContext())
                 {
-                    return db.SubCategoryTranslations.Find(id);
+                    return db.SubCategoryTranslations.FirstOrDefault(s => s.Id == id);
                 }
             }
             catch (Exception e)
@@ -55,7 +55,7 @@ namespace DataAccessLayer.Crud
         /// <summary>
         /// Add new range of subCategory translations and save
         /// </summary>
-        /// <param name="items">List of subCategory translations</param>
+        /// <param name="subCategoryTranslations">List of subCategory translations</param>
         public void AddRange(List<SubCategoryTranslation> subCategoryTranslations)
         {
             try
@@ -104,8 +104,12 @@ namespace DataAccessLayer.Crud
             {
                 using (LanguageSkillsDBContext db = new LanguageSkillsDBContext())
                 {
-                    db.SubCategoryTranslations.Remove(db.SubCategoryTranslations.Find(id));
-                    db.SaveChanges();
+                    SubCategoryTranslation subCategoryTranslation = db.SubCategoryTranslations.FirstOrDefault(s => s.Id == id);
+                    if (subCategoryTranslation != null)
+                    {
+                        db.SubCategoryTranslations.Remove(subCategoryTranslation);
+                        db.SaveChanges();
+                    }
                 }
             }
             catch (Exception e)

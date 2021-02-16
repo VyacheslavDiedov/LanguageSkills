@@ -41,7 +41,7 @@ namespace DataAccessLayer.Crud
             {
                 using (LanguageSkillsDBContext db = new LanguageSkillsDBContext())
                 {
-                    return db.Categories.Find(id);
+                    return db.Categories.FirstOrDefault(c => c.Id == id);
                 }
             }
             catch (Exception e)
@@ -104,8 +104,12 @@ namespace DataAccessLayer.Crud
             {
                 using (LanguageSkillsDBContext db = new LanguageSkillsDBContext())
                 {
-                    db.Categories.Remove(db.Categories.Find(id));
-                    db.SaveChanges();
+                    Category category = db.Categories.FirstOrDefault(c => c.Id == id);
+                    if (category != null)
+                    {
+                        db.Categories.Remove(category);
+                        db.SaveChanges();
+                    }
                 }
             }
             catch (Exception e)

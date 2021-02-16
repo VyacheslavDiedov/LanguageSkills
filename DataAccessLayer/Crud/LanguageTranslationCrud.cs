@@ -41,7 +41,7 @@ namespace DataAccessLayer.Crud
             {
                 using (LanguageSkillsDBContext db = new LanguageSkillsDBContext())
                 {
-                    return db.LanguageTranslations.Find(id);
+                    return db.LanguageTranslations.FirstOrDefault(l => l.Id == id);
                 }
             }
             catch (Exception e)
@@ -104,8 +104,12 @@ namespace DataAccessLayer.Crud
             {
                 using (LanguageSkillsDBContext db = new LanguageSkillsDBContext())
                 {
-                    db.LanguageTranslations.Remove(db.LanguageTranslations.Find(id));
-                    db.SaveChanges();
+                    LanguageTranslation languageTranslation = db.LanguageTranslations.FirstOrDefault(l => l.Id == id);
+                    if (languageTranslation != null)
+                    {
+                        db.LanguageTranslations.Remove(languageTranslation);
+                        db.SaveChanges();
+                    }
                 }
             }
             catch (Exception e)
