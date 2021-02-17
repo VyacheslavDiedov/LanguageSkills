@@ -61,7 +61,7 @@ namespace InitializeDataBase
                 }
                 catch (Exception e)
                 {
-                    HandleExceptions.ShowInConsole(this.GetType().Name, MethodBase.GetCurrentMethod().Name, e);
+                    ExceptionHandler.ShowInConsole(this.GetType().Name, MethodBase.GetCurrentMethod().Name, e);
                     _isData = false;
                     return null;
                 }
@@ -113,7 +113,7 @@ namespace InitializeDataBase
                 }
                 catch (Exception e)
                 {
-                    HandleExceptions.ShowInConsole(this.GetType().Name, MethodBase.GetCurrentMethod().Name, e);
+                    ExceptionHandler.ShowInConsole(this.GetType().Name, MethodBase.GetCurrentMethod().Name, e);
                 }
             }
 
@@ -182,11 +182,11 @@ namespace InitializeDataBase
                 {
                     _isData = false;
                     Console.WriteLine("Data doesn't exist");
-                    HandleExceptions.ShowInConsole(this.GetType().Name, MethodBase.GetCurrentMethod().Name, invalidOperationException);
+                    ExceptionHandler.ShowInConsole(this.GetType().Name, MethodBase.GetCurrentMethod().Name, invalidOperationException);
                 }
                 catch (Exception e)
                 {
-                    HandleExceptions.ShowInConsole(this.GetType().Name, MethodBase.GetCurrentMethod().Name, e);
+                    ExceptionHandler.ShowInConsole(this.GetType().Name, MethodBase.GetCurrentMethod().Name, e);
                 }
             }
 
@@ -262,11 +262,11 @@ namespace InitializeDataBase
                 {
                     _isData = false;
                     Console.WriteLine("Data doesn't exist");
-                    HandleExceptions.ShowInConsole(this.GetType().Name, MethodBase.GetCurrentMethod().Name, invalidOperationException);
+                    ExceptionHandler.ShowInConsole(this.GetType().Name, MethodBase.GetCurrentMethod().Name, invalidOperationException);
                 }
                 catch (Exception e)
                 {
-                    HandleExceptions.ShowInConsole(this.GetType().Name, MethodBase.GetCurrentMethod().Name, e);
+                    ExceptionHandler.ShowInConsole(this.GetType().Name, MethodBase.GetCurrentMethod().Name, e);
                 }
             }
 
@@ -343,11 +343,11 @@ namespace InitializeDataBase
                 {
                     _isData = false;
                     Console.WriteLine("Data doesn't exist");
-                    HandleExceptions.ShowInConsole(this.GetType().Name, MethodBase.GetCurrentMethod().Name, invalidOperationException);
+                    ExceptionHandler.ShowInConsole(this.GetType().Name, MethodBase.GetCurrentMethod().Name, invalidOperationException);
                 }
                 catch (Exception e)
                 {
-                    HandleExceptions.ShowInConsole(this.GetType().Name, MethodBase.GetCurrentMethod().Name, e);
+                    ExceptionHandler.ShowInConsole(this.GetType().Name, MethodBase.GetCurrentMethod().Name, e);
                 }
             }
 
@@ -437,11 +437,11 @@ namespace InitializeDataBase
                     {
                         _isData = false;
                         Console.WriteLine("Data doesn't exist");
-                        HandleExceptions.ShowInConsole(this.GetType().Name, MethodBase.GetCurrentMethod().Name, invalidOperationException);
+                        ExceptionHandler.ShowInConsole(this.GetType().Name, MethodBase.GetCurrentMethod().Name, invalidOperationException);
                     }
                     catch (Exception e)
                     {
-                        HandleExceptions.ShowInConsole(this.GetType().Name, MethodBase.GetCurrentMethod().Name, e);
+                        ExceptionHandler.ShowInConsole(this.GetType().Name, MethodBase.GetCurrentMethod().Name, e);
                     }
                 }
 
@@ -542,11 +542,11 @@ namespace InitializeDataBase
                         {
                             _isData = false;
                             Console.WriteLine("Data doesn't exist");
-                            HandleExceptions.ShowInConsole(this.GetType().Name, MethodBase.GetCurrentMethod().Name, invalidOperationException);
+                            ExceptionHandler.ShowInConsole(this.GetType().Name, MethodBase.GetCurrentMethod().Name, invalidOperationException);
                         }
                         catch (Exception e)
                         {
-                            HandleExceptions.ShowInConsole(this.GetType().Name, MethodBase.GetCurrentMethod().Name, e);
+                            ExceptionHandler.ShowInConsole(this.GetType().Name, MethodBase.GetCurrentMethod().Name, e);
                         }
                     }
 
