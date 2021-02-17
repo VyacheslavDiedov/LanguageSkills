@@ -1,0 +1,118 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
+using DataAccessLayer.DataBaseModels;
+using DataAccessLayer.Helpers;
+using Microsoft.EntityFrameworkCore;
+
+namespace DataAccessLayer.Crud
+{
+    /// <summary>
+    /// Get all languages from table DB
+    /// </summary>
+    /// <returns>List of languages</returns>
+    public class LanguageCrud 
+    {
+        public List<Language> GetAll()
+        {
+            try
+            {
+                using (LanguageSkillsDBContext db = new LanguageSkillsDBContext())
+                {
+                    return db.Languages.ToList();
+                }
+            }
+            catch (Exception e)
+            {
+                HandleExceptions.ShowInConsole(this.GetType().Name, MethodBase.GetCurrentMethod().Name, e);
+                return new List<Language>();
+            }
+        }
+
+        /// <summary>
+        /// Get language by Id from table DB
+        /// </summary>
+        /// <param name="id">Language Id</param>
+        /// <returns>Language</returns>
+        public Language GetById(int id)
+        {
+            try
+            {
+                using (LanguageSkillsDBContext db = new LanguageSkillsDBContext())
+                {
+                    return db.Languages.FirstOrDefault(l => l.Id == id);
+                }
+            }
+            catch (Exception e)
+            {
+                HandleExceptions.ShowInConsole(this.GetType().Name, MethodBase.GetCurrentMethod().Name, e);
+                return new Language();
+            }
+        }
+
+        /// <summary>
+        /// Add new range of languages and save
+        /// </summary>
+        /// <param name="languages">Language of items</param>
+        public void AddRange(List<Language> languages)
+        {
+            try
+            {
+                using (LanguageSkillsDBContext db = new LanguageSkillsDBContext())
+                {
+                    db.Languages.AddRange(languages);
+                    db.SaveChanges();
+                }
+            }
+            catch (Exception e)
+            {
+                HandleExceptions.ShowInConsole(this.GetType().Name, MethodBase.GetCurrentMethod().Name, e);
+            }
+        }
+
+        /// <summary>
+        /// Update the language and save
+        /// </summary>
+        /// <param name="language">Language to update</param>
+        public void Update(Language language)
+        {
+            try
+            {
+                using (LanguageSkillsDBContext db = new LanguageSkillsDBContext())
+                {
+                    db.Entry(language).State = EntityState.Modified;
+                    db.SaveChanges();
+                }
+            }
+            catch (Exception e)
+            {
+                HandleExceptions.ShowInConsole(this.GetType().Name, MethodBase.GetCurrentMethod().Name, e);
+            }
+        }
+
+        /// <summary>
+        /// Delete language by Id from table DB
+        /// </summary>
+        /// <param name="id">Language Id to delete</param>
+        public void Delete(int id)
+        {
+            try
+            {
+                using (LanguageSkillsDBContext db = new LanguageSkillsDBContext())
+                {
+                    Language language = db.Languages.FirstOrDefault(l => l.Id == id);
+                    if (language != null)
+                    {
+                        db.Languages.Remove(language);
+                        db.SaveChanges();
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                HandleExceptions.ShowInConsole(this.GetType().Name, MethodBase.GetCurrentMethod().Name, e);
+            }
+        }
+    }
+}

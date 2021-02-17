@@ -76,17 +76,17 @@ namespace DataAccessLayer.DataBaseModels
             {
                 entity.Property(e => e.LanguageTranslationName).IsRequired();
 
-                entity.HasOne(d => d.Language)
-                    .WithMany(p => p.LanguageTranslationLanguages)
-                    .HasForeignKey(d => d.LanguageId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("LanguageTranslations_fk1");
-
-                entity.HasOne(d => d.LanguageWord)
-                    .WithMany(p => p.LanguageTranslationLanguageWords)
-                    .HasForeignKey(d => d.LanguageWordId)
+                entity.HasOne(d => d.LanguageInitial)
+                    .WithMany(p => p.LanguageTranslationLanguageInitials)
+                    .HasForeignKey(d => d.LanguageInitialId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("LanguageTranslations_fk0");
+
+                entity.HasOne(d => d.LanguageToTranslate)
+                    .WithMany(p => p.LanguageTranslationLanguageToTranslates)
+                    .HasForeignKey(d => d.LanguageToTranslateId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("LanguageTranslations_fk1");
             });
 
             modelBuilder.Entity<SubCategory>(entity =>
