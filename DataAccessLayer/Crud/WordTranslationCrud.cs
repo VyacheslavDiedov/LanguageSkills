@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using DataAccessLayer.DataBaseModels;
+using DataAccessLayer.Helpers;
 using Microsoft.EntityFrameworkCore;
 
 namespace DataAccessLayer.Crud
@@ -24,8 +25,7 @@ namespace DataAccessLayer.Crud
             }
             catch (Exception e)
             {
-                Console.WriteLine($"\nClassName - {this.GetType().Name}\nMethodName - {MethodBase.GetCurrentMethod().Name}" +
-                                  $"\nException message: {e.Message}. \nException stack trace: {e.StackTrace}");
+                HandleExceptions.ShowInConsole(this.GetType().Name, MethodBase.GetCurrentMethod().Name, e);
                 return new List<WordTranslation>();
             }
         }
@@ -46,8 +46,7 @@ namespace DataAccessLayer.Crud
             }
             catch (Exception e)
             {
-                Console.WriteLine($"\nClassName - {this.GetType().Name}\nMethodName - {MethodBase.GetCurrentMethod().Name}" +
-                                  $"\nException message: {e.Message}. \nException stack trace: {e.StackTrace}");
+                HandleExceptions.ShowInConsole(this.GetType().Name, MethodBase.GetCurrentMethod().Name, e);
                 return new WordTranslation();
             }
             
@@ -69,8 +68,7 @@ namespace DataAccessLayer.Crud
             }
             catch (Exception e)
             {
-                Console.WriteLine($"\nClassName - {this.GetType().Name}\nMethodName - {MethodBase.GetCurrentMethod().Name}" +
-                                  $"\nException message: {e.Message}. \nException stack trace: {e.StackTrace}");
+                HandleExceptions.ShowInConsole(this.GetType().Name, MethodBase.GetCurrentMethod().Name, e);
             }
         }
 
@@ -90,8 +88,7 @@ namespace DataAccessLayer.Crud
             }
             catch (Exception e)
             {
-                Console.WriteLine($"\nClassName - {this.GetType().Name}\nMethodName - {MethodBase.GetCurrentMethod().Name}" +
-                                  $"\nException message: {e.Message}. \nException stack trace: {e.StackTrace}");
+                HandleExceptions.ShowInConsole(this.GetType().Name, MethodBase.GetCurrentMethod().Name, e);
             }
         }
 
@@ -115,8 +112,7 @@ namespace DataAccessLayer.Crud
             }
             catch (Exception e)
             {
-                Console.WriteLine($"\nClassName - {this.GetType().Name}\nMethodName - {MethodBase.GetCurrentMethod().Name}" +
-                                  $"\nException message: {e.Message}. \nException stack trace: {e.StackTrace}");
+                HandleExceptions.ShowInConsole(this.GetType().Name, MethodBase.GetCurrentMethod().Name, e);
             }
         }
     }

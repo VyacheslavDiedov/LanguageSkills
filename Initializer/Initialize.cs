@@ -6,6 +6,7 @@ using System.Reflection;
 using BusinessLogicLayer;
 using InitializeDataBase.ViewModels;
 using DataAccessLayer.DataBaseModels;
+using DataAccessLayer.Helpers;
 using OfficeOpenXml;
 
 namespace InitializeDataBase
@@ -60,8 +61,7 @@ namespace InitializeDataBase
                 }
                 catch (Exception e)
                 {
-                    Console.WriteLine($"\nClassName - {this.GetType().Name}\nMethodName - {MethodBase.GetCurrentMethod().Name}" +
-                                      $"\nException message: {e.Message}. \nException stack trace: {e.StackTrace}");
+                    HandleExceptions.ShowInConsole(this.GetType().Name, MethodBase.GetCurrentMethod().Name, e);
                     _isData = false;
                     return null;
                 }
@@ -113,8 +113,7 @@ namespace InitializeDataBase
                 }
                 catch (Exception e)
                 {
-                    Console.WriteLine($"\nClassName - {this.GetType().Name}\nMethodName - {MethodBase.GetCurrentMethod().Name}" +
-                                      $"\nException message: {e.Message}. \nException stack trace: {e.StackTrace}");
+                    HandleExceptions.ShowInConsole(this.GetType().Name, MethodBase.GetCurrentMethod().Name, e);
                 }
             }
 
@@ -183,14 +182,11 @@ namespace InitializeDataBase
                 {
                     _isData = false;
                     Console.WriteLine("Data doesn't exist");
-                    Console.WriteLine($"ClassName - {this.GetType().Name}\nMethodName - {MethodBase.GetCurrentMethod().Name}" +
-                                      $"\nException message: {invalidOperationException.Message}. \n" +
-                                      $"Exception stack trace: {invalidOperationException.StackTrace}");
+                    HandleExceptions.ShowInConsole(this.GetType().Name, MethodBase.GetCurrentMethod().Name, invalidOperationException);
                 }
                 catch (Exception e)
                 {
-                    Console.WriteLine($"\nClassName - {this.GetType().Name}\nMethodName - {MethodBase.GetCurrentMethod().Name}" +
-                                      $"\nException message: {e.Message}. \nException stack trace: {e.StackTrace}");
+                    HandleExceptions.ShowInConsole(this.GetType().Name, MethodBase.GetCurrentMethod().Name, e);
                 }
             }
 
@@ -266,14 +262,11 @@ namespace InitializeDataBase
                 {
                     _isData = false;
                     Console.WriteLine("Data doesn't exist");
-                    Console.WriteLine($"ClassName - {this.GetType().Name}\nMethodName - {MethodBase.GetCurrentMethod().Name}" +
-                                      $"\nException message: {invalidOperationException.Message}. \n" +
-                                      $"Exception stack trace: {invalidOperationException.StackTrace}");
+                    HandleExceptions.ShowInConsole(this.GetType().Name, MethodBase.GetCurrentMethod().Name, invalidOperationException);
                 }
                 catch (Exception e)
                 {
-                    Console.WriteLine($"\nClassName - {this.GetType().Name}\nMethodName - {MethodBase.GetCurrentMethod().Name}" +
-                                      $"\nException message: {e.Message}. \nException stack trace: {e.StackTrace}");
+                    HandleExceptions.ShowInConsole(this.GetType().Name, MethodBase.GetCurrentMethod().Name, e);
                 }
             }
 
@@ -350,14 +343,11 @@ namespace InitializeDataBase
                 {
                     _isData = false;
                     Console.WriteLine("Data doesn't exist");
-                    Console.WriteLine($"ClassName - {this.GetType().Name}\nMethodName - {MethodBase.GetCurrentMethod().Name}" +
-                                      $"\nException message: {invalidOperationException.Message}. \n" +
-                                      $"Exception stack trace: {invalidOperationException.StackTrace}");
+                    HandleExceptions.ShowInConsole(this.GetType().Name, MethodBase.GetCurrentMethod().Name, invalidOperationException);
                 }
                 catch (Exception e)
                 {
-                    Console.WriteLine($"\nClassName - {this.GetType().Name}\nMethodName - {MethodBase.GetCurrentMethod().Name}" +
-                                      $"\nException message: {e.Message}. \nException stack trace: {e.StackTrace}");
+                    HandleExceptions.ShowInConsole(this.GetType().Name, MethodBase.GetCurrentMethod().Name, e);
                 }
             }
 
@@ -447,14 +437,11 @@ namespace InitializeDataBase
                     {
                         _isData = false;
                         Console.WriteLine("Data doesn't exist");
-                        Console.WriteLine($"ClassName - {this.GetType().Name}\nMethodName - {MethodBase.GetCurrentMethod().Name}" +
-                                          $"\nException message: {invalidOperationException.Message}. \n" +
-                                          $"Exception stack trace: {invalidOperationException.StackTrace}");
+                        HandleExceptions.ShowInConsole(this.GetType().Name, MethodBase.GetCurrentMethod().Name, invalidOperationException);
                     }
                     catch (Exception e)
                     {
-                        Console.WriteLine($"\nClassName - {this.GetType().Name}\nMethodName - {MethodBase.GetCurrentMethod().Name}" +
-                                          $"\nException message: {e.Message}. \nException stack trace: {e.StackTrace}");
+                        HandleExceptions.ShowInConsole(this.GetType().Name, MethodBase.GetCurrentMethod().Name, e);
                     }
                 }
 
@@ -555,14 +542,11 @@ namespace InitializeDataBase
                         {
                             _isData = false;
                             Console.WriteLine("Data doesn't exist");
-                            Console.WriteLine($"ClassName - {this.GetType().Name}\nMethodName - {MethodBase.GetCurrentMethod().Name}" +
-                                              $"\nException message: {invalidOperationException.Message}. \n" +
-                                              $"Exception stack trace: {invalidOperationException.StackTrace}");
+                            HandleExceptions.ShowInConsole(this.GetType().Name, MethodBase.GetCurrentMethod().Name, invalidOperationException);
                         }
                         catch (Exception e)
                         {
-                            Console.WriteLine($"\nClassName - {this.GetType().Name}\nMethodName - {MethodBase.GetCurrentMethod().Name}" +
-                                              $"\nException message: {e.Message}. \nException stack trace: {e.StackTrace}");
+                            HandleExceptions.ShowInConsole(this.GetType().Name, MethodBase.GetCurrentMethod().Name, e);
                         }
                     }
 
