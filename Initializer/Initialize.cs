@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using BusinessLogicLayer;
 using InitializeDataBase.ViewModels;
 using DataAccessLayer.DataBaseModels;
+using DataAccessLayer.Helpers;
 using OfficeOpenXml;
 
 namespace InitializeDataBase
@@ -14,26 +16,64 @@ namespace InitializeDataBase
         private ManageAccessToEntity _manageAccessToEntity = new ManageAccessToEntity();
 
         private readonly string _pathRoot = Path.GetFullPath(Path.Combine(
-            Directory.GetCurrentDirectory(), @"..\..\..\..\LanguageSkills"));
+            Directory.GetCurrentDirectory(), @"..\..\..\..\LanguageSkills\wwwroot"));
         private bool _isData = true;
         private string _tempItem = "";
         private int _countStage = 0;
 
-        private string _createPath(string directoryName, string fileName, string fileExtension)
+        private string GeneratePath(string directoryName, string fileName, string fileExtension)
         {
-            return @"\wwwroot\Dictionary\" + directoryName + fileName + fileExtension;
+            //Generate a global path
+            string path = @"\Dictionary\" + directoryName + fileName + fileExtension;
+            return IsFileExist(path) ? path :
+                RemoveCharactersFromStartAndEnd(@"\Dictionary\" + directoryName, fileName, fileExtension);
         }
 
-        public ExcelWorksheet GetDataFromFile(string path)
+        private bool IsFileExist(string path)
         {
-            FileInfo fileInfo = new FileInfo(path);
-            ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
-            ExcelPackage package = new ExcelPackage(fileInfo);
-            ExcelWorksheet worksheet = package.Workbook.Worksheets.FirstOrDefault();
-            return worksheet;
+            return File.Exists(_pathRoot + path);
         }
 
-        public List<ParsedData> ParseData(ExcelWorksheet worksheet)
+        private string RemoveCharactersFromStartAndEnd(string path, string fileName, string fileExtension)
+        {
+            if (IsFileExist(path + fileName.Trim() + fileExtension))
+            {
+                return path + fileName.Trim() + fileExtension;
+            }
+            else
+            {
+                Console.WriteLine("File doesn't exist " + _pathRoot + path + fileName);
+                return null;
+            }
+        }
+
+        private ExcelWorksheet GetDataFromFile(string path)
+        {
+            if (path != null)
+            {
+                try
+                {
+                    FileInfo fileInfo = new FileInfo(path);
+                    ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+                    ExcelPackage package = new ExcelPackage(fileInfo);
+                    ExcelWorksheet worksheet = package.Workbook.Worksheets.FirstOrDefault();
+                    return worksheet;
+                }
+                catch (Exception e)
+                {
+                    HandleExceptions.ShowInConsole(this.GetType().Name, MethodBase.GetCurrentMethod().Name, e);
+                    _isData = false;
+                    return null;
+                }
+            }
+            else
+            {
+                _isData = false;
+                return null;
+            }
+        }
+
+        private List<ParsedData> ParseData(ExcelWorksheet worksheet)
         {
             var parsedData = new List<ParsedData>();
 
@@ -43,25 +83,37 @@ namespace InitializeDataBase
                 int rows = worksheet.Dimension.Rows;
                 int columns = worksheet.Dimension.Columns;
 
-                // loop through the worksheet rows and columns
-                for (int i = 2; i <= rows; i++)
+                try
                 {
-                    for (int j = 2; j <= columns; j++)
+                    //Loop through the worksheet rows and columns
+                    //Started counting from two, because the first row has the name of word 
+                    for (int i = 2; i <= rows; i++)
                     {
-                        if (worksheet.Cells[i, j].Value != null && worksheet.Cells[i, 1].Value != null && 
-                            worksheet.Cells[1, j].Value != null)
+                        //Started counting from two, because the first column have the name of language
+                        for (int j = 2; j <= columns; j++)
                         {
-                            var data = new ParsedData
+                            if (worksheet.Cells[i, j].Value != null && worksheet.Cells[i, 1].Value != null &&
+                                worksheet.Cells[1, j].Value != null)
                             {
-                                Word = worksheet.Cells[i, 1].Value.ToString(),
-                                Language = worksheet.Cells[1, j].Value.ToString(),
-                                Translation = worksheet.Cells[i, j].Value.ToString()
-                            };
-                            parsedData.Add(data);
+                                var data = new ParsedData
+                                {
+                                    //Get the word
+                                    Word = worksheet.Cells[i, 1].Value.ToString(),
+                                    //Get the language of word
+                                    Language = worksheet.Cells[1, j].Value.ToString(),
+                                    //Get the translation of word
+                                    Translation = worksheet.Cells[i, j].Value.ToString()
+                                };
+                                parsedData.Add(data);
+                            }
+                            else
+                                break;
                         }
-                        else
-                            break;
                     }
+                }
+                catch (Exception e)
+                {
+                    HandleExceptions.ShowInConsole(this.GetType().Name, MethodBase.GetCurrentMethod().Name, e);
                 }
             }
 
@@ -73,14 +125,14 @@ namespace InitializeDataBase
             return parsedData;
         }
 
-        private void _writeLanguagesToDataBase()
+        private void WriteLanguagesToDataBase()
         {
             //Get data from file
             List<ParsedData> languageData = ParseData(GetDataFromFile(
-                _pathRoot + _createPath("", "Languages", ".xlsx")));
+                _pathRoot + GeneratePath("", "Languages", ".xlsx")));
+            List<Language> allLanguages = new List<Language>();
 
             //Write data to languages
-            List<Language> allLanguages = new List<Language>();
             for (int i = 0, j = 0; i < languageData.Count; i++)
             {
                 if (allLanguages.FirstOrDefault(l => l.FullName == languageData[i].Word) == null)
@@ -93,10 +145,18 @@ namespace InitializeDataBase
                 }
             }
 
-            if (!_isData)
+            //Check whether there is such data in the database
+            List<string> existingLanguageNames = _manageAccessToEntity.Languages.GetAll().Select(l => l.FullName).ToList();
+            List<Language> newLanguages =
+                allLanguages.Where(l => !existingLanguageNames.Contains(l.FullName)).ToList();
+            if (!_isData || newLanguages.Count == 0)
+            {
+                Console.WriteLine("Languages exist");
                 return;
-            //Save data to dataBase
-            _manageAccessToEntity.Languages.CreateRange(allLanguages);
+            }
+                
+            //Take only new data and save data to dataBase
+            _manageAccessToEntity.Languages.AddRange(newLanguages);
             Console.WriteLine("{0}/8. Languages have added", ++_countStage);
 
 
@@ -114,37 +174,49 @@ namespace InitializeDataBase
                     allLanguageTranslations.Add(new LanguageTranslation()
                     {
                         LanguageTranslationName = language.Translation,
-                        LanguageWordId = idLanguageWord,
-                        LanguageId = idLanguage
+                        LanguageInitialId = idLanguageWord,
+                        LanguageToTranslateId = idLanguage
                     });
                 }
-                catch (InvalidOperationException)
+                catch (InvalidOperationException invalidOperationException)
                 {
                     _isData = false;
-                    Console.WriteLine("Data isn't exist");
+                    Console.WriteLine("Data doesn't exist");
+                    HandleExceptions.ShowInConsole(this.GetType().Name, MethodBase.GetCurrentMethod().Name, invalidOperationException);
                 }
                 catch (Exception e)
                 {
-                    Console.WriteLine(e);
+                    HandleExceptions.ShowInConsole(this.GetType().Name, MethodBase.GetCurrentMethod().Name, e);
                 }
             }
 
-            //Save data to dataBase
-            _manageAccessToEntity.LanguageTranslations.CreateRange(allLanguageTranslations);
-            Console.WriteLine("{0}/8. Language translations have added", ++_countStage);
+            //Take only new data and save data to dataBase
+            List<string> existingLanguageTranslationNames = _manageAccessToEntity.LanguageTranslations.
+                GetAll().Select(l => l.LanguageTranslationName).ToList();
+            List<LanguageTranslation> newLanguageTranslations = allLanguageTranslations.Where(lt =>
+                !existingLanguageTranslationNames.Contains(lt.LanguageTranslationName)).ToList();
+            if (newLanguageTranslations.Count != 0)
+            {
+                _manageAccessToEntity.LanguageTranslations.AddRange(newLanguageTranslations);
+                Console.WriteLine("{0}/8. Language translations have added", ++_countStage);
+            }
+            else
+            {
+                Console.WriteLine("Language translations exist");
+            }
         }
 
-        private void _writeTestsToDataBase()
+        private void WriteTestsToDataBase()
         {
             //Get data from file
             List<ParsedData> testData = ParseData(GetDataFromFile(
-                _pathRoot + _createPath("", "TestsNames", ".xlsx")));
+                _pathRoot + GeneratePath("", "TestsNames", ".xlsx")));
 
-            //Get all list of language
+            //Get all language
             List<Language> allLanguages = _manageAccessToEntity.Languages.GetAll();
 
-            //Write data to tests
-            List<Test> allTests = new List<Test>();
+        //Write data to tests
+        List<Test> allTests = new List<Test>();
             foreach (var testItem in testData.Where(testItem => _tempItem != testItem.Word))
             {
                 _tempItem = testItem.Word;
@@ -155,10 +227,17 @@ namespace InitializeDataBase
                 });
             }
 
-            if (!_isData)
+            //Check whether there is such data in the database
+            List<string> existingTestNames = _manageAccessToEntity.Tests.GetAll().Select(l => l.TestName).ToList();
+            List<Test> newTests = allTests.Where(t => !existingTestNames.Contains(t.TestName)).ToList();
+            if (!_isData || newTests.Count == 0)
+            {
+                Console.WriteLine("Tests exist");
                 return;
-            //Save data to dataBase
-            _manageAccessToEntity.Tests.CreateRange(allTests);
+            }
+
+            //Take only new data and save data to dataBase
+            _manageAccessToEntity.Tests.AddRange(newTests);
             Console.WriteLine("{0}/8. Tests have added", ++_countStage);
 
 
@@ -179,29 +258,41 @@ namespace InitializeDataBase
                         LanguageId = idLanguage
                     });
                 }
-                catch (InvalidOperationException)
+                catch (InvalidOperationException invalidOperationException)
                 {
                     _isData = false;
-                    Console.WriteLine("Data isn't exist");
+                    Console.WriteLine("Data doesn't exist");
+                    HandleExceptions.ShowInConsole(this.GetType().Name, MethodBase.GetCurrentMethod().Name, invalidOperationException);
                 }
                 catch (Exception e)
                 {
-                    Console.WriteLine(e);
+                    HandleExceptions.ShowInConsole(this.GetType().Name, MethodBase.GetCurrentMethod().Name, e);
                 }
             }
 
-            //Save data to dataBase
-            _manageAccessToEntity.TestTranslations.CreateRange(allTestTranslations);
-            Console.WriteLine("{0}/8. Test translations have added", ++_countStage);
+            //Take only new data and save data to dataBase
+            List<string> existingTestTranslationNames = _manageAccessToEntity.TestTranslations.
+                GetAll().Select(l => l.TestTranslationName).ToList();
+            List<TestTranslation> newTestTranslations = allTestTranslations.Where(t => !existingTestTranslationNames
+                .Contains(t.TestTranslationName)).ToList();
+            if (newTestTranslations.Count != 0)
+            {
+                _manageAccessToEntity.TestTranslations.AddRange(newTestTranslations);
+                Console.WriteLine("{0}/8. Test translations have added", ++_countStage);
+            }
+            else
+            {
+                Console.WriteLine("Test translations exist");
+            }
         }
 
-        private void _writeCategoriesToDataBase()
+        private void WriteCategoriesToDataBase()
         {
             //Get data from file
             List<ParsedData> categoryData = ParseData(GetDataFromFile(
-                _pathRoot + _createPath("", "CategoriesRoot", ".xlsx")));
+                _pathRoot + GeneratePath("", "CategoriesRoot", ".xlsx")));
 
-            //Get all list of language
+            //Get all language
             List<Language> allLanguages = _manageAccessToEntity.Languages.GetAll();
 
             //Write data to categories
@@ -212,14 +303,22 @@ namespace InitializeDataBase
                 allCategories.Add(new Category()
                 {
                     CategoryName = categoryItem.Word,
-                    CategoryImagePath = _createPath(@"pictures\", categoryItem.Word, ".jpg")
+                    CategoryImagePath = GeneratePath(@"pictures\", categoryItem.Word, ".jpg")
             });
             }
 
-            if (!_isData)
+            //Check whether there is such data in the database
+            List<string> existingCategoryNames = _manageAccessToEntity.Categories.GetAll().Select(l => l.CategoryName).ToList();
+            List<Category> newCategories = allCategories.Where(c => !existingCategoryNames
+                .Contains(c.CategoryName)).ToList();
+            if (!_isData || newCategories.Count == 0)
+            {
+                Console.WriteLine("Categories exist");
                 return;
-            //Save data to dataBase
-            _manageAccessToEntity.Categories.CreateRange(allCategories);
+            }
+
+            //Take only new data and save data to dataBase
+            _manageAccessToEntity.Categories.AddRange(newCategories);
             Console.WriteLine("{0}/8. Categories have added", ++_countStage);
 
 
@@ -240,35 +339,54 @@ namespace InitializeDataBase
                         LanguageId = idLanguage
                     });
                 }
-                catch (InvalidOperationException)
+                catch (InvalidOperationException invalidOperationException)
                 {
                     _isData = false;
-                    Console.WriteLine("Data isn't exist");
+                    Console.WriteLine("Data doesn't exist");
+                    HandleExceptions.ShowInConsole(this.GetType().Name, MethodBase.GetCurrentMethod().Name, invalidOperationException);
                 }
                 catch (Exception e)
                 {
-                    Console.WriteLine(e);
+                    HandleExceptions.ShowInConsole(this.GetType().Name, MethodBase.GetCurrentMethod().Name, e);
                 }
             }
 
-            //Save data to dataBase
-            _manageAccessToEntity.CategoryTranslations.CreateRange(allCategoryTranslations);
-            Console.WriteLine("{0}/8. Category translations have added", ++_countStage);
+            //Take only new data and save data to dataBase
+            List<string> existingCategoryTranslationNames = _manageAccessToEntity.CategoryTranslations.
+                GetAll().Select(c => c.CategoryTranslationName).ToList();
+            List<CategoryTranslation> newCategoryTranslations = allCategoryTranslations.Where(c =>
+                !existingCategoryTranslationNames.Contains(c.CategoryTranslationName)).ToList();
+            if (newCategoryTranslations.Count != 0)
+            {
+                _manageAccessToEntity.CategoryTranslations.AddRange(newCategoryTranslations);
+                Console.WriteLine("{0}/8. Category translations have added", ++_countStage);
+            }
+            else
+            {
+                Console.WriteLine("Category translations exist");
+            }
         }
 
-        private void _writeSubCategoriesToDataBase()
+        private void WriteSubCategoriesToDataBase()
         {
+            //Get existing data
+            List<string> existingSubCategoryNames = _manageAccessToEntity.SubCategories.
+                GetAll().Select(s => s.SubCategoryName).ToList();
+            List<string> existingSubCategoryTranslationNames = _manageAccessToEntity.SubCategoryTranslations.
+                GetAll().Select(s => s.SubCategoryTranslationName).ToList();
+            bool isSubCategories = true;
+
+            //Get all language
+            List<Language> allLanguages = _manageAccessToEntity.Languages.GetAll();
+
             //Get all categories
             List<Category> allCategories = _manageAccessToEntity.Categories.GetAll();
-
-            //Get all list of language
-            List<Language> allLanguages = _manageAccessToEntity.Languages.GetAll();
 
             foreach (var category in allCategories)
             {
                 //Get data from file
                 List<ParsedData> subCategoryData = ParseData(GetDataFromFile(
-                    _pathRoot + _createPath(category.CategoryName + @"\", 
+                    _pathRoot + GeneratePath(category.CategoryName + @"\", 
                         category.CategoryName, ".xlsx")));
 
                 //Write data to subCategories
@@ -280,16 +398,23 @@ namespace InitializeDataBase
                     allSubCategories.Add(new SubCategory()
                     {
                         SubCategoryName = subCategoryItem.Word,
-                        SubCategoryImagePath = _createPath(category.CategoryName + @"\pictures\",
+                        SubCategoryImagePath = GeneratePath(category.CategoryName + @"\pictures\",
                             subCategoryItem.Word, ".jpg"),
                         CategoryId = category.Id
                 });
                 }
 
-                if (!_isData)
-                    return;
-                //Save data to dataBase
-                _manageAccessToEntity.SubCategories.CreateRange(allSubCategories);
+                //Take only new data and save data to dataBase
+                List<SubCategory> newSubCategories = allSubCategories.Where(w => !existingSubCategoryNames
+                    .Contains(w.SubCategoryName)).ToList();
+                if (!_isData || newSubCategories.Count != 0)
+                {
+                    _manageAccessToEntity.SubCategories.AddRange(newSubCategories);
+                }
+                else
+                {
+                    isSubCategories = false;
+                }
 
                 //Get all subCategories
                 allSubCategories = _manageAccessToEntity.SubCategories.GetAll();
@@ -308,40 +433,61 @@ namespace InitializeDataBase
                             LanguageId = idLanguage
                         });
                     }
-                    catch (InvalidOperationException)
+                    catch (InvalidOperationException invalidOperationException)
                     {
                         _isData = false;
-                        Console.WriteLine("Data isn't exist");
+                        Console.WriteLine("Data doesn't exist");
+                        HandleExceptions.ShowInConsole(this.GetType().Name, MethodBase.GetCurrentMethod().Name, invalidOperationException);
                     }
                     catch (Exception e)
                     {
-                        Console.WriteLine(e);
+                        HandleExceptions.ShowInConsole(this.GetType().Name, MethodBase.GetCurrentMethod().Name, e);
                     }
                 }
 
-                //Save data to dataBase
-                _manageAccessToEntity.SubCategoryTranslations.CreateRange(allSubCategoryTranslations);
+                //Take only new data and save data to dataBase
+                List<SubCategoryTranslation> newSubCategoryTranslations = allSubCategoryTranslations.Where(s => 
+                    !existingSubCategoryTranslationNames.Contains(s.SubCategoryTranslationName)).ToList();
+                if (!_isData || newSubCategoryTranslations.Count != 0)
+                {
+                    _manageAccessToEntity.SubCategoryTranslations.AddRange(newSubCategoryTranslations);
+                }
             }
-            Console.WriteLine("{0}/8. SubCategories and subCategory translation have added", ++_countStage);
+
+            if (isSubCategories)
+            {
+                Console.WriteLine("{0}/8. SubCategories and subCategory translation have added", ++_countStage);
+            }
+            else
+            {
+                Console.WriteLine("Subcategories and subCategory translation exist. Added only new data");
+            }
         }
 
-        private void _writeWordsToDataBase()
+        private void WriteWordsToDataBase()
         {
+            //Get existing data
+            List<string> existingWordNames = _manageAccessToEntity.Words.
+                GetAll().Select(w => w.WordName).ToList();
+            List<string> existingWordTranslationNames = _manageAccessToEntity.WordTranslations.
+                GetAll().Select(w => w.WordTranslationName).ToList();
+            bool isWord = true;
+
+            //Get all language
+            List<Language> allLanguages = _manageAccessToEntity.Languages.GetAll();
+
             //Get all categories
             List<Category> allCategories = _manageAccessToEntity.Categories.GetAll();
 
             //Get all subCategories
             List<SubCategory> allSubCategories = _manageAccessToEntity.SubCategories.GetAll();
 
-            //Get all list of language
-            List<Language> allLanguages = _manageAccessToEntity.Languages.GetAll();
-
             foreach (var category in allCategories)
             {
                 foreach (var subCategory in allSubCategories.Where(s => s.CategoryId == category.Id))
                 {
                     //Get data from file
-                    List<ParsedData> wordData = ParseData(GetDataFromFile(_pathRoot + _createPath(
+                    List<ParsedData> wordData = ParseData(GetDataFromFile(_pathRoot + GeneratePath(
                             category.CategoryName + @"\" + subCategory.SubCategoryName + @"\",
                             subCategory.SubCategoryName, ".xlsx")));
 
@@ -354,17 +500,23 @@ namespace InitializeDataBase
                         allWords.Add(new Word()
                         {
                             WordName = word.Word,
-                            WordImagePath = _createPath(category.CategoryName + @"\" + subCategory.SubCategoryName 
+                            WordImagePath = GeneratePath(category.CategoryName + @"\" + subCategory.SubCategoryName 
                                                         + @"\pictures\", word.Word, ".jpg"),
                             SubCategoryId = subCategory.Id
                         });
                     }
 
-                    if (!_isData)
-                        return;
-                    //Save data to dataBase
-                    _manageAccessToEntity.Words.CreateRange(allWords);
-
+                    //Take only new data and save data to dataBase
+                    List<Word> newWords = allWords.Where(w => !existingWordNames.Contains(w.WordName)).ToList();
+                    if (newWords.Count != 0)
+                    {
+                        _manageAccessToEntity.Words.AddRange(newWords);
+                    }
+                    else
+                    {
+                        isWord = false;
+                    }
+                    
                     //Get all words
                     allWords = _manageAccessToEntity.Words.GetAll();
                     List<WordTranslation> allWordTranslations = new List<WordTranslation>();
@@ -381,36 +533,50 @@ namespace InitializeDataBase
                                 WordTranslationName = word.Translation,
                                 WordId = idWord,
                                 LanguageId = idLanguage,
-                                PronunciationPath = _createPath(category.CategoryName + @"\" + subCategory.SubCategoryName 
+                                PronunciationPath = GeneratePath(category.CategoryName + @"\" + subCategory.SubCategoryName 
                                                                 + @"\pronounce\" + word.Language + @"\", 
                                                             word.Word, ".wav"),
                             });
                         }
-                        catch (InvalidOperationException)
+                        catch (InvalidOperationException invalidOperationException)
                         {
                             _isData = false;
-                            Console.WriteLine("Data isn't exist");
+                            Console.WriteLine("Data doesn't exist");
+                            HandleExceptions.ShowInConsole(this.GetType().Name, MethodBase.GetCurrentMethod().Name, invalidOperationException);
                         }
                         catch (Exception e)
                         {
-                            Console.WriteLine(e);
+                            HandleExceptions.ShowInConsole(this.GetType().Name, MethodBase.GetCurrentMethod().Name, e);
                         }
                     }
 
-                    //Save data to dataBase
-                    _manageAccessToEntity.WordTranslations.CreateRange(allWordTranslations);
+                    //Take only new data and save data to dataBase
+                    List<WordTranslation> newWordTranslations = allWordTranslations
+                        .Where(w => !existingWordTranslationNames.Contains(w.WordTranslationName)).ToList();
+                    if (newWordTranslations.Count != 0)
+                    {
+                        _manageAccessToEntity.WordTranslations.AddRange(newWordTranslations);
+                    }
                 }
             }
-            Console.WriteLine("{0}/8. Words and word translations have added", ++_countStage);
+
+            if (isWord)
+            {
+                Console.WriteLine("{0}/8. Words and word translations have added", ++_countStage);
+            }
+            else
+            {
+                Console.WriteLine("Words and word translations exist. Added only new data");
+            }
         }
 
         public void Initializer()
         {
-            Action initializeDataToDataBaseAction = _writeLanguagesToDataBase;
-            initializeDataToDataBaseAction += _writeTestsToDataBase;
-            initializeDataToDataBaseAction += _writeCategoriesToDataBase;
-            initializeDataToDataBaseAction += _writeSubCategoriesToDataBase;
-            initializeDataToDataBaseAction += _writeWordsToDataBase;
+            Action initializeDataToDataBaseAction = WriteLanguagesToDataBase;
+            initializeDataToDataBaseAction += WriteTestsToDataBase;
+            initializeDataToDataBaseAction += WriteCategoriesToDataBase;
+            initializeDataToDataBaseAction += WriteSubCategoriesToDataBase;
+            initializeDataToDataBaseAction += WriteWordsToDataBase;
             initializeDataToDataBaseAction += () =>
             {
                 if (_isData && _countStage == 8)
@@ -419,7 +585,7 @@ namespace InitializeDataBase
                 }
                 else
                 {
-                    Console.WriteLine("Something went wrong");
+                    Console.WriteLine("Something went wrong. Not all steps were taken");
                 }
             };
 

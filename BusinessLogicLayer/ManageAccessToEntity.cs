@@ -1,116 +1,116 @@
-﻿using DataAccessLayer.Repositories.Implementation;
+﻿using DataAccessLayer.Crud;
 
 namespace BusinessLogicLayer
 {
     public class ManageAccessToEntity
     {
-        private CategoryRepository _categoryRepository;
-        private CategoryTranslationRepository _categoryTranslationRepository;
-        private SubCategoryRepository _subCategoryRepository;
-        private SubCategoryTranslationRepository _subCategoryTranslationRepository;
-        private WordRepository _wordRepository;
-        private WordTranslationRepository _wordTranslationRepository;
-        private TestRepository _testRepository;
-        private TestTranslationRepository _testTranslationRepository;
-        private LanguageRepository _languageRepository;
-        private LanguageTranslationRepository _languageTranslationRepository;
+        private CategoryCrud _categoryCrud;
+        private CategoryTranslationCrud _categoryTranslationCrud;
+        private SubCategoryCrud _subCategoryCrud;
+        private SubCategoryTranslationCrud _subCategoryTranslationCrud;
+        private WordCrud _wordCrud;
+        private WordTranslationCrud _wordTranslationCrud;
+        private TestCrud _testCrud;
+        private TestTranslationCrud _testTranslationCrud;
+        private LanguageCrud _languageCrud;
+        private LanguageTranslationCrud _languageTranslationCrud;
 
-        public CategoryRepository Categories
+        public CategoryCrud Categories
         {
             get
             {
-                if (_categoryRepository == null)
-                    _categoryRepository = new CategoryRepository();
-                return _categoryRepository;
+                if (_categoryCrud == null)
+                    _categoryCrud = new CategoryCrud();
+                return _categoryCrud;
             }
         }
 
-        public CategoryTranslationRepository CategoryTranslations
+        public CategoryTranslationCrud CategoryTranslations
         {
             get
             {
-                if (_categoryTranslationRepository == null)
-                    _categoryTranslationRepository = new CategoryTranslationRepository();
-                return _categoryTranslationRepository;
+                if (_categoryTranslationCrud == null)
+                    _categoryTranslationCrud = new CategoryTranslationCrud();
+                return _categoryTranslationCrud;
             }
         }
 
-        public SubCategoryRepository SubCategories
+        public SubCategoryCrud SubCategories
         {
             get
             {
-                if (_subCategoryRepository == null)
-                    _subCategoryRepository = new SubCategoryRepository();
-                return _subCategoryRepository;
+                if (_subCategoryCrud == null)
+                    _subCategoryCrud = new SubCategoryCrud();
+                return _subCategoryCrud;
             }
         }
 
-        public SubCategoryTranslationRepository SubCategoryTranslations
+        public SubCategoryTranslationCrud SubCategoryTranslations
         {
             get
             {
-                if (_subCategoryTranslationRepository == null)
-                    _subCategoryTranslationRepository = new SubCategoryTranslationRepository();
-                return _subCategoryTranslationRepository;
+                if (_subCategoryTranslationCrud == null)
+                    _subCategoryTranslationCrud = new SubCategoryTranslationCrud();
+                return _subCategoryTranslationCrud;
             }
         }
 
-        public WordRepository Words
+        public WordCrud Words
         {
             get
             {
-                if (_wordRepository == null)
-                    _wordRepository = new WordRepository();
-                return _wordRepository;
+                if (_wordCrud == null)
+                    _wordCrud = new WordCrud();
+                return _wordCrud;
             }
         }
 
-        public WordTranslationRepository WordTranslations
+        public WordTranslationCrud WordTranslations
         {
             get
             {
-                if (_wordTranslationRepository == null)
-                    _wordTranslationRepository = new WordTranslationRepository();
-                return _wordTranslationRepository;
+                if (_wordTranslationCrud == null)
+                    _wordTranslationCrud = new WordTranslationCrud();
+                return _wordTranslationCrud;
             }
         }
-        public TestRepository Tests
+        public TestCrud Tests
         {
             get
             {
-                if (_testRepository == null)
-                    _testRepository = new TestRepository();
-                return _testRepository;
-            }
-        }
-
-        public TestTranslationRepository TestTranslations
-        {
-            get
-            {
-                if (_testTranslationRepository == null)
-                    _testTranslationRepository = new TestTranslationRepository();
-                return _testTranslationRepository;
+                if (_testCrud == null)
+                    _testCrud = new TestCrud();
+                return _testCrud;
             }
         }
 
-        public LanguageRepository Languages
+        public TestTranslationCrud TestTranslations
         {
             get
             {
-                if (_languageRepository == null)
-                    _languageRepository = new LanguageRepository();
-                return _languageRepository;
+                if (_testTranslationCrud == null)
+                    _testTranslationCrud = new TestTranslationCrud();
+                return _testTranslationCrud;
             }
         }
 
-        public LanguageTranslationRepository LanguageTranslations
+        public LanguageCrud Languages
         {
             get
             {
-                if (_languageTranslationRepository == null)
-                    _languageTranslationRepository = new LanguageTranslationRepository();
-                return _languageTranslationRepository;
+                if (_languageCrud == null)
+                    _languageCrud = new LanguageCrud();
+                return _languageCrud;
+            }
+        }
+
+        public LanguageTranslationCrud LanguageTranslations
+        {
+            get
+            {
+                if (_languageTranslationCrud == null)
+                    _languageTranslationCrud = new LanguageTranslationCrud();
+                return _languageTranslationCrud;
             }
         }
     }
