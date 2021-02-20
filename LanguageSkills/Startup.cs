@@ -6,6 +6,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using DataAccessLayer.DataBaseModels;
+using Microsoft.OpenApi.Models;
+using Swashbuckle.AspNetCore.SwaggerUI;
 
 namespace LanguageSkills
 {
@@ -26,12 +28,16 @@ namespace LanguageSkills
             services.AddDbContext<LanguageSkillsDBContext>(optionsBuilder =>
                 optionsBuilder.UseNpgsql(connection));
 
-
             services.AddControllersWithViews();
             // In production, the Angular files will be served from this directory
             services.AddSpaStaticFiles(configuration =>
             {
                 configuration.RootPath = "ClientApp/dist";
+            });
+
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "LanguageSkills", Version = "v1" });
             });
         }
 
@@ -48,6 +54,14 @@ namespace LanguageSkills
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
+
+            app.UseSwagger();
+
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "LanguageSkills API V1");
+                c.DocExpansion(DocExpansion.None);
+            });
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
