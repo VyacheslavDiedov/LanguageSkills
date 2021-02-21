@@ -52,6 +52,27 @@ namespace DataAccessLayer.Crud
         }
 
         /// <summary>
+        /// Get words by SubCategoryId from table DB
+        /// </summary>
+        /// <param name="subCategoryId">SubCategory Id</param>
+        /// <returns>List of Words</returns>
+        public List<Word> GetWordsBySubCategoryId(int subCategoryId)
+        {
+            try
+            {
+                using (LanguageSkillsDBContext db = new LanguageSkillsDBContext())
+                {
+                    return db.Words.Where(w => w.SubCategoryId == subCategoryId).ToList();
+                }
+            }
+            catch (Exception e)
+            {
+                ExceptionHandler.ShowInConsole(this.GetType().Name, MethodBase.GetCurrentMethod().Name, e);
+                return new List<Word>();
+            }
+        }
+
+        /// <summary>
         /// Add new range of words and save
         /// </summary>
         /// <param name="words">List of words</param>
