@@ -18,8 +18,8 @@ namespace LanguageSkills.Controllers
         [HttpGet]
         public ActionResult<List<ItemWithTranslation>> GetLanguages()
         {
-            var translationHandler = new TranslationHandler(_manageAccessToEntity);
-            var languageTranslations = translationHandler.GetLanguagesWithTranslations();
+            TranslationHandler translationHandler = new TranslationHandler(_manageAccessToEntity);
+            List<ItemWithTranslation> languageTranslations = translationHandler.GetLanguagesWithTranslations();
             if (languageTranslations.Count != 0)
             {
                 return Ok(languageTranslations);

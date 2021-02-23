@@ -2,6 +2,7 @@
 using System.Linq;
 using BusinessLogicLayer.Helpers;
 using BusinessLogicLayer.ViewModels;
+using DataAccessLayer.DataBaseModels;
 
 namespace BusinessLogicLayer.Translation
 {
@@ -17,11 +18,11 @@ namespace BusinessLogicLayer.Translation
 
         public List<ItemWithTranslation> GetLanguagesWithTranslations()
         {
-            var languageWithTranslation = new List<ItemWithTranslation>();
-            var allLanguage = _manageAccessToEntity.Languages.GetAll();
-            var countryHandler = new CountryHandler(allLanguage);
-            var languageInCountry = countryHandler.TakeCountryByLanguage();
-            var allWords = _manageAccessToEntity.Words.GetAll();
+            List<ItemWithTranslation> languageWithTranslation = new List<ItemWithTranslation>();
+            List<Language> allLanguage = _manageAccessToEntity.Languages.GetAll();
+            CountryHandler countryHandler = new CountryHandler(allLanguage);
+            Dictionary<string, string> languageInCountry = countryHandler.TakeCountryByLanguage();
+            List<Word> allWords = _manageAccessToEntity.Words.GetAll();
 
             foreach (var language in allLanguage)
             {
@@ -44,9 +45,9 @@ namespace BusinessLogicLayer.Translation
         {
             _languageNativeTranslationId = languageNativeTranslationId;
             _languageToLearnId = languageToLearnId;
-            var categoriesWithTranslation = new List<ItemWithTranslation>();
-            var allCategories = _manageAccessToEntity.Categories.GetAll();
-            var categoryTranslationsByLanguages = _manageAccessToEntity.CategoryTranslations.GetAll()
+            List<ItemWithTranslation> categoriesWithTranslation = new List<ItemWithTranslation>();
+            List<Category> allCategories = _manageAccessToEntity.Categories.GetAll();
+            List<CategoryTranslation> categoryTranslationsByLanguages = _manageAccessToEntity.CategoryTranslations.GetAll()
                 .Where(c => c.LanguageId == _languageNativeTranslationId || c.LanguageId == _languageToLearnId).ToList();
             if (categoryTranslationsByLanguages.Count != 0)
             {
@@ -70,9 +71,9 @@ namespace BusinessLogicLayer.Translation
 
         public List<ItemWithTranslation> GetSubCategoriesWithTranslations(int categoryId)
         {
-            var subCategoriesWithTranslation = new List<ItemWithTranslation>();
-            var subCategoriesByCategory = _manageAccessToEntity.SubCategories.GetAll().Where(s => s.CategoryId == categoryId);
-            var subCategoryTranslationsByLanguages = _manageAccessToEntity.SubCategoryTranslations.GetAll()
+            List<ItemWithTranslation> subCategoriesWithTranslation = new List<ItemWithTranslation>();
+            List<SubCategory> subCategoriesByCategory = _manageAccessToEntity.SubCategories.GetAll().Where(s => s.CategoryId == categoryId).ToList();
+            List<SubCategoryTranslation> subCategoryTranslationsByLanguages = _manageAccessToEntity.SubCategoryTranslations.GetAll()
                 .Where(c => c.LanguageId == _languageNativeTranslationId || c.LanguageId == _languageToLearnId).ToList();
             foreach (var subCategory in subCategoriesByCategory)
             {
@@ -93,9 +94,9 @@ namespace BusinessLogicLayer.Translation
 
         public List<ItemWithTranslation> GetWordsWithTranslations(int subCategoryId)
         {
-            var wordsWithTranslation = new List<ItemWithTranslation>();
-            var wordsBySubCategory = _manageAccessToEntity.Words.GetWordsBySubCategoryId(subCategoryId);
-            var wordsTranslationsByWordIds = _manageAccessToEntity.WordTranslations
+            List<ItemWithTranslation> wordsWithTranslation = new List<ItemWithTranslation>();
+            List<Word> wordsBySubCategory = _manageAccessToEntity.Words.GetWordsBySubCategoryId(subCategoryId);
+            List<WordTranslation> wordsTranslationsByWordIds = _manageAccessToEntity.WordTranslations
                 .GetWordTranslationsByWordIds(wordsBySubCategory.Select(w => w.Id).ToList());
             foreach (var word in wordsBySubCategory)
             {

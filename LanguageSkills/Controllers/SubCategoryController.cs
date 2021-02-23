@@ -26,7 +26,7 @@ namespace LanguageSkills.Controllers
             PaginationFilter<ItemWithTranslation> paginationFilter = new PaginationFilter<ItemWithTranslation>();
 
             //Count of items on the page
-            int pageSize = 15;
+            const int pageSize = 15;
 
             var subCategoriesWithTranslationsByCategory = translationHandler.GetSubCategoriesWithTranslations(categoryId);
             if (subCategoriesWithTranslationsByCategory.Count != 0)

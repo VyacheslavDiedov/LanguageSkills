@@ -13,7 +13,7 @@ namespace BusinessLogicLayer.Helpers
         }
         public Dictionary<string, string> TakeCountryByLanguage()
         {
-            var languageInCountry = new Dictionary<string, string>();
+            Dictionary<string, string> languageInCountry = new Dictionary<string, string>();
             string country = "";
             foreach (var language in _allLanguages)
             {

@@ -21,7 +21,7 @@ namespace LanguageSkills.Controllers
         public ActionResult<List<ItemWithTranslation>> GetWords(int subCategoryId)
         {
             TranslationHandler translationHandler = new TranslationHandler(_manageAccessToEntity);
-            var wordWithTranslationsBySubCategory = translationHandler.GetWordsWithTranslations(subCategoryId);
+            List<ItemWithTranslation> wordWithTranslationsBySubCategory = translationHandler.GetWordsWithTranslations(subCategoryId);
             if (wordWithTranslationsBySubCategory.Count != 0)
             {
                 return Ok(wordWithTranslationsBySubCategory);

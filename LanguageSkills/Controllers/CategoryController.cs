@@ -1,4 +1,5 @@
-﻿using BusinessLogicLayer;
+﻿using System.Collections.Generic;
+using BusinessLogicLayer;
 using BusinessLogicLayer.Helpers;
 using BusinessLogicLayer.Translation;
 using BusinessLogicLayer.ViewModels;
@@ -27,9 +28,9 @@ namespace LanguageSkills.Controllers
             PaginationFilter<ItemWithTranslation> paginationFilter = new PaginationFilter<ItemWithTranslation>();
 
             //Count of items on the page
-            int pageSize = 15;
+            const int pageSize = 15;
 
-            var allCategoriesWithTranslations = translationHandler
+            List<ItemWithTranslation> allCategoriesWithTranslations = translationHandler
                 .GetCategoriesWithTranslations(nativeLanguageId, languageToLearnId);
             if (allCategoriesWithTranslations.Count != 0)
             {
