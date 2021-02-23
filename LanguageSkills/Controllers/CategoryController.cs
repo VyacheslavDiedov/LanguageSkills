@@ -21,8 +21,9 @@ namespace LanguageSkills.Controllers
         /// <param name="languageToLearnId">User language for learning</param>
         /// <param name="pageNumber">Number of page</param>
         /// <returns>response status "OK" and list of categories with translation or status "NotFound" and error message</returns>
-        [HttpGet("nativeLanguageId={nativeLanguageId}&languageToLearnId={languageToLearnId}&pageNumber={pageNumber}")]
-        public ActionResult<PagedResult<ItemWithTranslation>> GetCategories(int nativeLanguageId, int languageToLearnId, int pageNumber)
+        [HttpGet]
+        public ActionResult<PagedResult<ItemWithTranslation>> GetCategories(int nativeLanguageId, 
+            int languageToLearnId, int pageNumber)
         {
             TranslationHandler translationHandler = new TranslationHandler(_manageAccessToEntity);
             PaginationFilter<ItemWithTranslation> paginationFilter = new PaginationFilter<ItemWithTranslation>();

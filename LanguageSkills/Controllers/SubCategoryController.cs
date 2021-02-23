@@ -19,7 +19,7 @@ namespace LanguageSkills.Controllers
         /// <param name="categoryId">Category selected by the user</param>
         /// <param name="pageNumber">Number of page</param>
         /// <returns>response status "OK" and list of subCategories with translations or status "NotFound" and error message</returns>
-        [HttpGet("categoryId={categoryId}&pageNumber={pageNumber}")]
+        [HttpGet]
         public ActionResult<PagedResult<ItemWithTranslation>> GetSubCategories(int categoryId, int pageNumber)
         {
             TranslationHandler translationHandler = new TranslationHandler(_manageAccessToEntity);
