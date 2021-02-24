@@ -1,8 +1,7 @@
 ﻿using BusinessLogicLayer;
-using BusinessLogicLayer.Helpers;
 using BusinessLogicLayer.Translation;
 using BusinessLogicLayer.ViewModels;
-using BusinessLogicLayer.ViewModels.Pagination;
+using DataAccessLayer.ViewModels.Pagination;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LanguageSkills.Controllers
@@ -23,21 +22,19 @@ namespace LanguageSkills.Controllers
         public ActionResult<PagedResult<ItemWithTranslation>> GetSubCategories(int categoryId, int pageNumber)
         {
             TranslationHandler translationHandler = new TranslationHandler(_manageAccessToEntity);
-            PaginationFilter<ItemWithTranslation> paginationFilter = new PaginationFilter<ItemWithTranslation>();
-
+           
             //Count of items on the page
             const int pageSize = 15;
 
-            var subCategoriesWithTranslationsByCategory = translationHandler.GetSubCategoriesWithTranslations(categoryId);
-            if (subCategoriesWithTranslationsByCategory.Count != 0)
+            PagedResult<ItemWithTranslation> subCategoriesWithTranslationsByCategory = 
+                translationHandler.GetSubCategoriesWithTranslations(categoryId, pageNumber, pageSize);
+            if (subCategoriesWithTranslationsByCategory.ItemsWithTranslations.Count != 0)
             {
 
-                return Ok(paginationFilter.GetPagedItems(pageNumber, pageSize, subCategoriesWithTranslationsByCategory));
+                return Ok(subCategoriesWithTranslationsByCategory);
             }
-            else
-            {
-                return NotFound("SubCategories don't exist");
-            }
+
+            return NotFound("SubCategories don't exist");
         }
     }
 }

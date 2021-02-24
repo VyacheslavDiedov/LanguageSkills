@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using BusinessLogicLayer.ViewModels.Pagination;
+using DataAccessLayer.ViewModels.Pagination;
 
-namespace BusinessLogicLayer.Helpers
+namespace DataAccessLayer.Helpers
 {
     public class PaginationFilter<T>
     {

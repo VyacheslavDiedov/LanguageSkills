@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace BusinessLogicLayer.ViewModels.Pagination
+namespace DataAccessLayer.ViewModels.Pagination
 {
     public class PageInfo
     {

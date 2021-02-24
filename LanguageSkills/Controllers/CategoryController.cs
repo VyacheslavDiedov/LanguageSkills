@@ -1,9 +1,7 @@
-﻿using System.Collections.Generic;
-using BusinessLogicLayer;
-using BusinessLogicLayer.Helpers;
+﻿using BusinessLogicLayer;
 using BusinessLogicLayer.Translation;
 using BusinessLogicLayer.ViewModels;
-using BusinessLogicLayer.ViewModels.Pagination;
+using DataAccessLayer.ViewModels.Pagination;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LanguageSkills.Controllers
@@ -22,26 +20,22 @@ namespace LanguageSkills.Controllers
         /// <param name="pageNumber">Number of page</param>
         /// <returns>response status "OK" and list of categories with translation or status "NotFound" and error message</returns>
         [HttpGet]
-        public ActionResult<PagedResult<ItemWithTranslation>> GetCategories(int nativeLanguageId, 
-            int languageToLearnId, int pageNumber)
+        public ActionResult<PagedResult<ItemWithTranslation>> GetCategories(int nativeLanguageId, int languageToLearnId, int pageNumber)
         {
             TranslationHandler translationHandler = new TranslationHandler(_manageAccessToEntity);
-            PaginationFilter<ItemWithTranslation> paginationFilter = new PaginationFilter<ItemWithTranslation>();
 
             //Count of items on the page
             const int pageSize = 15;
 
-            List<ItemWithTranslation> allCategoriesWithTranslations = translationHandler
-                .GetCategoriesWithTranslations(nativeLanguageId, languageToLearnId);
-            if (allCategoriesWithTranslations.Count != 0)
+            PagedResult<ItemWithTranslation> allCategoriesWithTranslations = translationHandler
+                .GetCategoriesWithTranslations(nativeLanguageId, languageToLearnId, pageNumber, pageSize);
+            if (allCategoriesWithTranslations.ItemsWithTranslations.Count != 0)
             {
                 
-                return Ok(paginationFilter.GetPagedItems(pageNumber, pageSize, allCategoriesWithTranslations));
+                return Ok(allCategoriesWithTranslations);
             }
-            else
-            {
-                return NotFound("Categories don't exist");
-            }
+            
+            return NotFound("Categories don't exist");
         }
     }
 }

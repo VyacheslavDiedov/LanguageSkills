@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace BusinessLogicLayer.ViewModels.Pagination
+namespace DataAccessLayer.ViewModels.Pagination
 {
     public class PagedResult<T>
     {
