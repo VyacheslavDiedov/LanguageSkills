@@ -2,7 +2,7 @@
 
 namespace DataAccessLayer.Helpers
 {
-    public static class HandleExceptions
+    public static class ExceptionHandler
     {
         public static void ShowInConsole(string className, string methodName, Exception exception)
         {

@@ -25,7 +25,7 @@ namespace DataAccessLayer.Crud
             }
             catch (Exception e)
             {
-                HandleExceptions.ShowInConsole(this.GetType().Name, MethodBase.GetCurrentMethod().Name, e);
+                ExceptionHandler.ShowInConsole(this.GetType().Name, MethodBase.GetCurrentMethod().Name, e);
                 return new List<WordTranslation>();
             }
         }
@@ -46,10 +46,52 @@ namespace DataAccessLayer.Crud
             }
             catch (Exception e)
             {
-                HandleExceptions.ShowInConsole(this.GetType().Name, MethodBase.GetCurrentMethod().Name, e);
+                ExceptionHandler.ShowInConsole(this.GetType().Name, MethodBase.GetCurrentMethod().Name, e);
                 return new WordTranslation();
             }
             
+        }
+
+        /// <summary>
+        /// Get word translations by LanguageId from table DB
+        /// </summary>
+        /// <param name="languageId">Language Id</param>
+        /// <returns>List of Word translations</returns>
+        public List<WordTranslation> GetWordTranslationsByLanguageId(int languageId)
+        {
+            try
+            {
+                using (LanguageSkillsDBContext db = new LanguageSkillsDBContext())
+                {
+                    return db.WordTranslations.Where(w => w.LanguageId == languageId).ToList();
+                }
+            }
+            catch (Exception e)
+            {
+                ExceptionHandler.ShowInConsole(this.GetType().Name, MethodBase.GetCurrentMethod().Name, e);
+                return new List<WordTranslation>();
+            }
+        }
+
+        /// <summary>
+        /// Get word translations by word Ids from table DB
+        /// </summary>
+        /// <param name="wordIds">Word Ids</param>
+        /// <returns>List of Word translations</returns>
+        public List<WordTranslation> GetWordTranslationsByWordIds(List<int> wordIds)
+        {
+            try
+            {
+                using (LanguageSkillsDBContext db = new LanguageSkillsDBContext())
+                {
+                    return db.WordTranslations.Where(w => wordIds.Contains(w.WordId)).ToList();
+                }
+            }
+            catch (Exception e)
+            {
+                ExceptionHandler.ShowInConsole(this.GetType().Name, MethodBase.GetCurrentMethod().Name, e);
+                return new List<WordTranslation>();
+            }
         }
 
         /// <summary>
@@ -68,7 +110,7 @@ namespace DataAccessLayer.Crud
             }
             catch (Exception e)
             {
-                HandleExceptions.ShowInConsole(this.GetType().Name, MethodBase.GetCurrentMethod().Name, e);
+                ExceptionHandler.ShowInConsole(this.GetType().Name, MethodBase.GetCurrentMethod().Name, e);
             }
         }
 
@@ -88,7 +130,7 @@ namespace DataAccessLayer.Crud
             }
             catch (Exception e)
             {
-                HandleExceptions.ShowInConsole(this.GetType().Name, MethodBase.GetCurrentMethod().Name, e);
+                ExceptionHandler.ShowInConsole(this.GetType().Name, MethodBase.GetCurrentMethod().Name, e);
             }
         }
 
@@ -112,7 +154,7 @@ namespace DataAccessLayer.Crud
             }
             catch (Exception e)
             {
-                HandleExceptions.ShowInConsole(this.GetType().Name, MethodBase.GetCurrentMethod().Name, e);
+                ExceptionHandler.ShowInConsole(this.GetType().Name, MethodBase.GetCurrentMethod().Name, e);
             }
         }
     }

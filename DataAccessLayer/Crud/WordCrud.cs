@@ -25,7 +25,7 @@ namespace DataAccessLayer.Crud
             }
             catch (Exception e)
             {
-                HandleExceptions.ShowInConsole(this.GetType().Name, MethodBase.GetCurrentMethod().Name, e);
+                ExceptionHandler.ShowInConsole(this.GetType().Name, MethodBase.GetCurrentMethod().Name, e);
                 return new List<Word>();
             }
         }
@@ -46,8 +46,30 @@ namespace DataAccessLayer.Crud
             }
             catch (Exception e)
             {
-                HandleExceptions.ShowInConsole(this.GetType().Name, MethodBase.GetCurrentMethod().Name, e);
+                ExceptionHandler.ShowInConsole(this.GetType().Name, MethodBase.GetCurrentMethod().Name, e);
                 return new Word();
+            }
+        }
+
+        /// <summary>
+        /// Get words with translations by SubCategoryId from table DB
+        /// </summary>
+        /// <param name="subCategoryId">SubCategory Id</param>
+        /// <returns>List of Words with translations</returns>
+        public List<Word> GetWordsBySubCategoryId(int subCategoryId)
+        {
+            try
+            {
+                using (LanguageSkillsDBContext db = new LanguageSkillsDBContext())
+                {
+                    return db.Words.Where(w => w.SubCategoryId == subCategoryId)
+                        .Include(w => w.WordTranslations).ToList();
+                }
+            }
+            catch (Exception e)
+            {
+                ExceptionHandler.ShowInConsole(this.GetType().Name, MethodBase.GetCurrentMethod().Name, e);
+                return new List<Word>();
             }
         }
 
@@ -67,7 +89,7 @@ namespace DataAccessLayer.Crud
             }
             catch (Exception e)
             {
-                HandleExceptions.ShowInConsole(this.GetType().Name, MethodBase.GetCurrentMethod().Name, e);
+                ExceptionHandler.ShowInConsole(this.GetType().Name, MethodBase.GetCurrentMethod().Name, e);
             }
         }
 
@@ -87,7 +109,7 @@ namespace DataAccessLayer.Crud
             }
             catch (Exception e)
             {
-                HandleExceptions.ShowInConsole(this.GetType().Name, MethodBase.GetCurrentMethod().Name, e);
+                ExceptionHandler.ShowInConsole(this.GetType().Name, MethodBase.GetCurrentMethod().Name, e);
             }
         }
 
@@ -111,7 +133,7 @@ namespace DataAccessLayer.Crud
             }
             catch (Exception e)
             {
-                HandleExceptions.ShowInConsole(this.GetType().Name, MethodBase.GetCurrentMethod().Name, e);
+                ExceptionHandler.ShowInConsole(this.GetType().Name, MethodBase.GetCurrentMethod().Name, e);
             }
         }
     }

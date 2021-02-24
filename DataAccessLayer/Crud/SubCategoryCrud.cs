@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reflection;
 using DataAccessLayer.DataBaseModels;
 using DataAccessLayer.Helpers;
+using DataAccessLayer.ViewModels.Pagination;
 using Microsoft.EntityFrameworkCore;
 
 namespace DataAccessLayer.Crud
@@ -25,8 +26,34 @@ namespace DataAccessLayer.Crud
             }
             catch (Exception e)
             {
-                HandleExceptions.ShowInConsole(this.GetType().Name, MethodBase.GetCurrentMethod().Name, e);
+                ExceptionHandler.ShowInConsole(this.GetType().Name, MethodBase.GetCurrentMethod().Name, e);
                 return new List<SubCategory>();
+            }
+        }
+
+        /// <summary>
+        /// Get the page of subCategories with translations by category Id
+        /// </summary>
+        /// /// <param name="categoryId">Id category</param>
+        /// <param name="pageNumber">Number of page</param>
+        /// <param name="pageSize">Size of page</param>
+        /// <returns>List of subCategories with translations and info about pagination</returns>
+        public PagedResult<SubCategory> GetPagedCategoriesWithTranslationsByCategory(int categoryId, int pageNumber, int pageSize)
+        {
+            PaginationFilter<SubCategory> paginationFilter = new PaginationFilter<SubCategory>();
+            try
+            {
+                using (LanguageSkillsDBContext db = new LanguageSkillsDBContext())
+                {
+                    List<SubCategory> categoriesWithTranslation = 
+                        db.SubCategories.Where(s => s.CategoryId == categoryId).Include(s => s.SubCategoryTranslations).ToList();
+                    return paginationFilter.GetPagedItems(pageNumber, pageSize, categoriesWithTranslation);
+                }
+            }
+            catch (Exception e)
+            {
+                ExceptionHandler.ShowInConsole(this.GetType().Name, MethodBase.GetCurrentMethod().Name, e);
+                return new PagedResult<SubCategory>();
             }
         }
 
@@ -46,7 +73,7 @@ namespace DataAccessLayer.Crud
             }
             catch (Exception e)
             {
-                HandleExceptions.ShowInConsole(this.GetType().Name, MethodBase.GetCurrentMethod().Name, e);
+                ExceptionHandler.ShowInConsole(this.GetType().Name, MethodBase.GetCurrentMethod().Name, e);
                 return new SubCategory();
             }
         }
@@ -67,7 +94,7 @@ namespace DataAccessLayer.Crud
             }
             catch (Exception e)
             {
-                HandleExceptions.ShowInConsole(this.GetType().Name, MethodBase.GetCurrentMethod().Name, e);
+                ExceptionHandler.ShowInConsole(this.GetType().Name, MethodBase.GetCurrentMethod().Name, e);
             }
         }
 
@@ -87,7 +114,7 @@ namespace DataAccessLayer.Crud
             }
             catch (Exception e)
             {
-                HandleExceptions.ShowInConsole(this.GetType().Name, MethodBase.GetCurrentMethod().Name, e);
+                ExceptionHandler.ShowInConsole(this.GetType().Name, MethodBase.GetCurrentMethod().Name, e);
             }
         }
 
@@ -111,7 +138,7 @@ namespace DataAccessLayer.Crud
             }
             catch (Exception e)
             {
-                HandleExceptions.ShowInConsole(this.GetType().Name, MethodBase.GetCurrentMethod().Name, e);
+                ExceptionHandler.ShowInConsole(this.GetType().Name, MethodBase.GetCurrentMethod().Name, e);
             }
         }
     }

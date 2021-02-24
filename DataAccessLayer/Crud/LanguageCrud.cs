@@ -8,12 +8,12 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DataAccessLayer.Crud
 {
-    /// <summary>
-    /// Get all languages from table DB
-    /// </summary>
-    /// <returns>List of languages</returns>
-    public class LanguageCrud 
+    public class LanguageCrud
     {
+        /// <summary>
+        /// Get all languages from table DB
+        /// </summary>
+        /// <returns>List of languages</returns>
         public List<Language> GetAll()
         {
             try
@@ -25,7 +25,27 @@ namespace DataAccessLayer.Crud
             }
             catch (Exception e)
             {
-                HandleExceptions.ShowInConsole(this.GetType().Name, MethodBase.GetCurrentMethod().Name, e);
+                ExceptionHandler.ShowInConsole(this.GetType().Name, MethodBase.GetCurrentMethod().Name, e);
+                return new List<Language>();
+            }
+        }
+
+        /// <summary>
+        /// Get all languages with translations from table DB
+        /// </summary>
+        /// <returns>List of languages with translations</returns>
+        public List<Language> GetAllLanguagesWithTranslations()
+        {
+            try
+            {
+                using (LanguageSkillsDBContext db = new LanguageSkillsDBContext())
+                {
+                    return db.Languages.Include(l => l.LanguageTranslationLanguageToTranslates).ToList();
+                }
+            }
+            catch (Exception e)
+            {
+                ExceptionHandler.ShowInConsole(this.GetType().Name, MethodBase.GetCurrentMethod().Name, e);
                 return new List<Language>();
             }
         }
@@ -46,7 +66,7 @@ namespace DataAccessLayer.Crud
             }
             catch (Exception e)
             {
-                HandleExceptions.ShowInConsole(this.GetType().Name, MethodBase.GetCurrentMethod().Name, e);
+                ExceptionHandler.ShowInConsole(this.GetType().Name, MethodBase.GetCurrentMethod().Name, e);
                 return new Language();
             }
         }
@@ -67,7 +87,7 @@ namespace DataAccessLayer.Crud
             }
             catch (Exception e)
             {
-                HandleExceptions.ShowInConsole(this.GetType().Name, MethodBase.GetCurrentMethod().Name, e);
+                ExceptionHandler.ShowInConsole(this.GetType().Name, MethodBase.GetCurrentMethod().Name, e);
             }
         }
 
@@ -87,7 +107,7 @@ namespace DataAccessLayer.Crud
             }
             catch (Exception e)
             {
-                HandleExceptions.ShowInConsole(this.GetType().Name, MethodBase.GetCurrentMethod().Name, e);
+                ExceptionHandler.ShowInConsole(this.GetType().Name, MethodBase.GetCurrentMethod().Name, e);
             }
         }
 
@@ -111,7 +131,7 @@ namespace DataAccessLayer.Crud
             }
             catch (Exception e)
             {
-                HandleExceptions.ShowInConsole(this.GetType().Name, MethodBase.GetCurrentMethod().Name, e);
+                ExceptionHandler.ShowInConsole(this.GetType().Name, MethodBase.GetCurrentMethod().Name, e);
             }
         }
     }
