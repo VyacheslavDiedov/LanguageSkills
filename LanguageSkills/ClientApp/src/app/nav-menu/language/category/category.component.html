@@ -1,0 +1,26 @@
+<section class="main_container">
+  <div class="main_window_container">
+    <div class="select_category_container" >
+      <div class="title_container">Category</div>
+      <div class="items_container">
+        <div *ngFor="let categoryWithTranslation of categoryWithTranslations">
+          <div class="category_container" [routerLink]="['/subCategory', categoryWithTranslation.id]" >
+            <img src= "{{categoryWithTranslation.categoryImagePath}}" alt="">
+            <span class ="category_name_container">{{categoryWithTranslation.categoryTranslationLearnedName}}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="pagination_container">
+      <img src="../../../../assets/icon/chevron_left_grey_54x54.png" (click)="prevPage(1)" alt="">
+      <div *ngFor="let i of [1, 2, 3, 4]"
+           [class.pagination_page_count]="true"
+           [class.is_active]="isActive(i)"
+           (click)="pageSelection(i)"
+      >
+        <div>{{i}}</div>
+      </div>
+      <img src="../../../../assets/icon/chevron_right_grey_54x54.png" (click)="nextPage(1)" alt="">
+    </div>
+  </div>
+</section>

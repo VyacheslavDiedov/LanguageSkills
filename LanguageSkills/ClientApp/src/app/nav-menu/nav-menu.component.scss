@@ -1,0 +1,67 @@
+.header_container{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+
+  height: 68px;
+  background: #FFFFFF no-repeat padding-box;
+  box-shadow: 0 2px 4px #0000001A;
+
+  @media screen and (max-width: 1600px) {
+    height: 6vh;
+  }
+
+  .content_container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+
+    margin: auto;
+    width: 1433px;
+
+    @media screen and (max-width: 1600px) {
+      width: 75%;
+    }
+
+    .header_brand {
+      font-family: Roboto;
+      font-weight: bold;
+      color: #259FFC;
+      cursor: pointer;
+    }
+
+    .header_button_container {
+
+      .language_header_container {
+        display: inline;
+        margin-right: 40px;
+        cursor: pointer;
+
+        img {
+          margin-right: 10px;
+        }
+      }
+
+      .header_settings {
+        cursor: pointer;
+
+        img {
+          width: 16px;
+          height: 16px;
+          margin-right: 41px;
+        }
+      }
+
+      .header_profile_tool {
+        cursor: pointer;
+
+        img {
+          width: 14px;
+          height: 14px;
+        }
+      }
+    }
+  }
+}
+
+
