@@ -1,13 +1,15 @@
 <section class="main_container">
   <div class="main_window_container">
     <div class="select_category_container" >
-      <div class="title_container">Category</div>
+      <div class="title_container">{{categoryName}}</div>
       <div class="items_container">
-        <div *ngFor="let categoryWithTranslation of categoryWithTranslations">
+        <div *ngFor="let subCategoryWithTranslation of subCategoryWithTranslations">
           <div class="category_container" [routerLink]="['/subCategory',
-          categoryWithTranslation.id, categoryWithTranslation.categoryTranslationLearnedName]" >
-            <img src= "{{categoryWithTranslation.categoryImagePath}}" alt="">
-            <span class ="category_name_container">{{categoryWithTranslation.categoryTranslationLearnedName}}</span>
+            subCategoryWithTranslation.id, subCategoryWithTranslation.subCategoryTranslationLearnedName]" >
+
+            <img src= "{{subCategoryWithTranslation.subCategoryImagePath}}" alt="">
+            <span class ="category_name_container">{{subCategoryWithTranslation.subCategoryTranslationLearnedName}}</span>
+
           </div>
         </div>
       </div>

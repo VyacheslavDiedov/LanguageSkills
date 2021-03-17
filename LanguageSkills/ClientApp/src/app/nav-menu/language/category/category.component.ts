@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
+import {ActivatedRoute} from '@angular/router';
 
 export class CategoryWithTranslation{
   id: number;
@@ -12,7 +13,17 @@ export class CategoryWithTranslation{
   templateUrl: './category.component.html',
   styleUrls: ['./category.component.scss']
 })
-export class CategoryComponent {
+export class CategoryComponent implements OnInit{
+  idLanguageToLearned: number;
+
+  constructor(private activateRoute: ActivatedRoute){
+    this.idLanguageToLearned = activateRoute.snapshot.params['idLanguageToLearned'];
+  }
+
+  ngOnInit() {
+    //todo make query
+  }
+
   public categoryWithTranslations: CategoryWithTranslation[] = [
     {id: 1, categoryName: 'Nature and environment', categoryImagePath: '../../../../assets/img/Ukraine.jpg', categoryTranslationLearnedName: 'Nature and environment'},
     {id: 2, categoryName: 'Animal', categoryImagePath: '../../../../assets/img/Ukraine.jpg', categoryTranslationLearnedName: 'Animal'},
@@ -29,7 +40,6 @@ export class CategoryComponent {
     {id: 13, categoryName: 'Animal', categoryImagePath: '../../../../assets/img/Ukraine.jpg', categoryTranslationLearnedName: 'Animal'},
     {id: 14, categoryName: 'Animal', categoryImagePath: '../../../../assets/img/Ukraine.jpg', categoryTranslationLearnedName: 'Animal'},
     {id: 15, categoryName: 'Animal', categoryImagePath: '../../../../assets/img/Ukraine.jpg', categoryTranslationLearnedName: 'Animal'},
-
   ];
 
   isActive(pageNumber) {
