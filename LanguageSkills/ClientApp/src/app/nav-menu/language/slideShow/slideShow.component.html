@@ -1,0 +1,39 @@
+<div *ngIf="currentWord == undefined; else isData">Loading...</div>
+<ng-template #isData>
+  <section class="main_container">
+    <div class="main_window_container">
+      <div class="slide_show_container" >
+        <div class="title_container">{{subCategoryName}}</div>
+        <div class="items_container">
+          <div class="image_container">
+            <img class="chevron_image" src="../../../../assets/icon/chevron_left_grey_54x54.png" alt="" (click)="prevSlide()">
+            <img class="word_image" src="{{currentWord.wordImagePath}}" alt="">
+            <img class="chevron_image" src="../../../../assets/icon/chevron_right_grey_54x54.png" alt="" (click)="nextSlide()">
+          </div>
+          <div class="word_container">
+            <div class="word_native_container">{{currentWord.wordTranslationNativeName}}</div>
+            <div class="word_learned_container">{{currentWord.wordTranslationLearnedName}}</div>
+            <div class="dashboard_container">
+              <a data-title="Start slideshow">
+                <img src="../../../../assets/icon/play.png" >
+              </a>
+              <a data-title="Next word">
+                <img src="../../../../assets/icon/swipe.png" alt="">
+              </a>
+                <img *ngIf="true; else activeTest" src="../../../../assets/icon/test.png" alt="">
+              <ng-template #activeTest>
+                <a data-title="Start test">
+                  <img  src="../../../../assets/icon/testActive.png" alt="">
+                </a>
+              </ng-template>
+              <a data-title="Start over">
+                <img src="../../../../assets/icon/restart.png" alt="">
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</ng-template>
+

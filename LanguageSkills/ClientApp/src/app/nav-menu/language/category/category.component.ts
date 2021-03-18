@@ -9,7 +9,7 @@ export class CategoryWithTranslation{
 }
 
 @Component({
-  selector: 'app-select-language-page',
+  selector: 'app-select-category-page',
   templateUrl: './category.component.html',
   styleUrls: ['./category.component.scss']
 })

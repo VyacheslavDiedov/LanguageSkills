@@ -10,7 +10,7 @@ export class SubCategoryWithTranslation{
 }
 
 @Component({
-  selector: 'app-select-language-page',
+  selector: 'app-select-subCategory-page',
   templateUrl: './subCategory.component.html',
   styleUrls: ['./subCategory.component.scss']
 })

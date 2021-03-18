@@ -8,6 +8,7 @@ import { NavMenuComponent } from './nav-menu/nav-menu.component';
 import {SelectLanguageComponent} from './nav-menu/language/select-language.component';
 import {CategoryComponent} from './nav-menu/language/category/category.component';
 import {SubCategoryComponent} from './nav-menu/language/subCategory/subCategory.component';
+import {SlideShowComponent} from './nav-menu/language/slideShow/slideShow.component';
 
 
 @NgModule({
@@ -16,7 +17,8 @@ import {SubCategoryComponent} from './nav-menu/language/subCategory/subCategory.
     NavMenuComponent,
     SelectLanguageComponent,
     CategoryComponent,
-    SubCategoryComponent
+    SubCategoryComponent,
+    SlideShowComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
@@ -26,6 +28,7 @@ import {SubCategoryComponent} from './nav-menu/language/subCategory/subCategory.
       {path: '', component: SelectLanguageComponent, pathMatch: 'full'},
       {path: 'category/:idLanguageToLearned', component: CategoryComponent },
       {path: 'subCategory/:idCategory/:categoryName', component: SubCategoryComponent },
+      {path: 'slideShow/:idSubCategory/:subCategoryName', component: SlideShowComponent }
     ])
   ],
   providers: [],
