@@ -4,8 +4,8 @@
       <div class="title_container">Category</div>
       <div class="items_container">
         <div *ngFor="let categoryWithTranslation of categoryWithTranslations">
-          <div class="category_container" [routerLink]="['/subCategory',
-          categoryWithTranslation.id, categoryWithTranslation.categoryTranslationLearnedName]" >
+          <div class="category_container" [routerLink]="['./subCategory',
+          categoryWithTranslation.id, categoryWithTranslation.categoryTranslationLearnedName]"  >
             <img src= "{{categoryWithTranslation.categoryImagePath}}" alt="">
             <span class ="category_name_container">{{categoryWithTranslation.categoryTranslationLearnedName}}</span>
           </div>
@@ -25,3 +25,5 @@
     </div>
   </div>
 </section>
+<router-outlet></router-outlet>
+

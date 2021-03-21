@@ -1,0 +1,13 @@
+<div class="breadcrumb_container">
+  <div class="breadcrumb_back_button">
+    <img src="./../../assets/svg/left_arrow.svg" alt="">
+    <span (click)="backButtonHandle()">Back</span>
+  </div>
+  <ol class="breadcrumb">
+    <li *ngFor="let breadcrumb of breadcrumbs; last as isLast">
+            <span [class.last_item]="isLast" [routerLink]="breadcrumb.url" routerLinkActive="router-link-active">
+                {{ breadcrumb.label}}
+            </span>
+    </li>
+  </ol>
+</div>
