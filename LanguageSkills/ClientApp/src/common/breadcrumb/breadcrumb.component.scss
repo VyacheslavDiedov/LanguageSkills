@@ -2,6 +2,10 @@
   display: flex;
   flex-direction: row;
 
+  @media screen and (max-width: 800px) {
+    display: none;
+  }
+
   .breadcrumb_back_button{
     display: flex;
     align-items: center;
@@ -13,7 +17,7 @@
 
     border: 1px solid #259FFC;
     box-sizing: border-box;
-
+    cursor: pointer;
 
     img{
       padding-right: 12px;
@@ -21,7 +25,6 @@
 
     a, span {
       color: #259FFC;
-      cursor: pointer;
 
       font-size: 14px;
     }

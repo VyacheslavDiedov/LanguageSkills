@@ -17,7 +17,7 @@
     cursor: pointer;
 
     @media screen and (max-width: 1600px) {
-      padding-top: 5%;
+      padding-top: 4%;
       font: normal normal bold 20px/30px Roboto;
     }
   }
@@ -30,8 +30,9 @@
 
     @media screen and (max-width: 1600px) {
       padding-top: 3%;
-      padding-left: 6vw;
-      padding-right: 6vw;
+      padding-left: 13vw;
+      padding-right: 13vw;
+      grid-gap: 12px;
     }
 
     display: grid;
@@ -57,9 +58,8 @@
         height: 100%;
         border-radius: 8px 8px 0 0;
 
-        @media screen and (max-width: 1600px) {
-          width: 14.2vw;
-          height: 14vh;
+        @media screen and (max-width: 1300px) {
+          height: 17vh;
         }
       }
 
@@ -78,6 +78,10 @@
 
         @media screen and (max-width: 1600px) {
           height: 7vh;
+        }
+
+        @media screen and (max-width: 1000px) {
+          height: auto;
         }
       }
     }

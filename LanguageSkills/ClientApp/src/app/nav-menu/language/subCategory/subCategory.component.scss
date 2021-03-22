@@ -28,8 +28,9 @@
 
     @media screen and (max-width: 1600px) {
       padding-top: 2%;
-      padding-left: 3vw;
-      padding-right: 3vw;
+      padding-left: 4vw;
+      padding-right: 4vw;
+      grid-gap: 12px;
     }
 
     display: grid;
@@ -56,8 +57,7 @@
         border-radius: 8px 8px 0 0;
 
         @media screen and (max-width: 1600px) {
-          width: 12.2vw;
-          height: 12.2vh;
+          height: 12vh;
         }
       }
 
@@ -68,15 +68,21 @@
         flex-wrap: wrap;
         justify-content: center;
 
-        font-weight: 500;
+        font-size: 20px;
 
         height: 67px;
         margin: auto;
+        padding: 0 5px 0 5px;
         border-radius: 0 0 8px 8px;
 
         @media screen and (max-width: 1600px) {
           height: 5vh;
           font-size: 13px;
+        }
+
+        @media screen and (max-width: 1000px) {
+          height: 4vh;
+          font-size: 10px;
         }
       }
     }

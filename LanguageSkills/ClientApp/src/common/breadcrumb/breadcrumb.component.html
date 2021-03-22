@@ -1,7 +1,7 @@
 <div class="breadcrumb_container">
-  <div class="breadcrumb_back_button">
+  <div class="breadcrumb_back_button" (click)="backButtonHandle()">
     <img src="./../../assets/svg/left_arrow.svg" alt="">
-    <span (click)="backButtonHandle()">Back</span>
+    <span >Back</span>
   </div>
   <ol class="breadcrumb">
     <li *ngFor="let breadcrumb of breadcrumbs; last as isLast">
