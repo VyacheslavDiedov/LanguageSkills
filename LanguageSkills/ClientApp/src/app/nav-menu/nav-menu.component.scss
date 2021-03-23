@@ -12,6 +12,10 @@
     height: 6vh;
   }
 
+  @media screen and (max-width: 650px) {
+    height: 7.6vh;
+  }
+
   .content_container {
     display: flex;
     flex-direction: row;
@@ -22,6 +26,10 @@
 
     @media screen and (max-width: 1600px) {
       width: 75%;
+    }
+
+    @media screen and (max-width: 650px) {
+      width: 88%;
     }
 
     .brand_breadcrumb_container{
@@ -52,6 +60,10 @@
         margin-right: 40px;
         cursor: pointer;
 
+        @media screen and (max-width: 360px) {
+          margin-right: 21px;
+        }
+
         img {
           margin-right: 10px;
         }
@@ -64,6 +76,10 @@
           width: 16px;
           height: 16px;
           margin-right: 41px;
+
+          @media screen and (max-width: 800px) {
+            margin-right: 21px;
+          }
         }
       }
 
