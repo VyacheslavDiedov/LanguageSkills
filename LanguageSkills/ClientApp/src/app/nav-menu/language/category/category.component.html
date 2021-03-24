@@ -1,6 +1,6 @@
 <section class="main_container">
   <div class="main_window_container">
-    <div class="select_category_container" >
+    <div class="select_category_container" (swiperight)="swipeLeft()" (swipeleft)="swipeRight()">
       <div class="title_container">Category</div>
       <div class="items_container">
         <div *ngFor="let categoryWithTranslation of categoryWithTranslations">
@@ -19,9 +19,13 @@
            [class.is_active]="isActive(i)"
            (click)="pageSelection(i)"
       >
-        <div >{{i}}</div>
+        <div>{{i}}</div>
       </div>
       <img src="../../../../assets/icon/chevron_right_grey_54x54.png" (click)="nextPage(1)" alt="">
+    </div>
+    <div class="mobile_pagination_line_container">
+      <hr class="first_line" >
+      <hr [style.width]="widthValue + '%'" class="second_line" >
     </div>
   </div>
 </section>

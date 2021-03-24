@@ -1,12 +1,11 @@
 <section class="main_container">
   <div class="main_window_container">
-    <div class="select_sub_category_container" >
+    <div class="select_sub_category_container" (swiperight)="swipeLeft()" (swipeleft)="swipeRight()">
       <div class="title_container">{{categoryName}}</div>
       <div class="items_container">
         <div *ngFor="let subCategoryWithTranslation of subCategoryWithTranslations">
           <div class="sub_category_container" [routerLink]="['./slideShow',
             subCategoryWithTranslation.id, subCategoryWithTranslation.subCategoryTranslationLearnedName]" >
-
             <img src= "{{subCategoryWithTranslation.subCategoryImagePath}}" alt="">
             <span class ="sub_category_name_container">{{subCategoryWithTranslation.subCategoryTranslationLearnedName}}</span>
 
@@ -24,6 +23,10 @@
         <div>{{i}}</div>
       </div>
       <img src="../../../../assets/icon/chevron_right_grey_54x54.png" (click)="nextPage(1)" alt="">
+    </div>
+    <div class="mobile_pagination_line_container">
+      <hr class="first_line" >
+      <hr [style.width]="widthValue + '%'" class="second_line" >
     </div>
   </div>
 </section>

@@ -1,5 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
+import 'hammerjs';
+import 'hammer-timejs';
 
 export class CategoryWithTranslation{
   id: number;
@@ -17,10 +19,12 @@ export class CategoryComponent implements OnInit{
   idLanguageToLearned: number;
   innerWidth: number;
   categoryWithTranslations: CategoryWithTranslation[];
+  widthValue: number;
 
   constructor(private activateRoute: ActivatedRoute){
     this.idLanguageToLearned = activateRoute.snapshot.params['idLanguageToLearned'];
     this.innerWidth = window.innerWidth;
+    this.widthValue = 25;
   }
 
   ngOnInit() {
@@ -80,6 +84,18 @@ export class CategoryComponent implements OnInit{
   nextPage(pageNumber) {
     if (pageNumber < 4) {
       alert(pageNumber + 1);
+    }
+  }
+
+  swipeRight(){
+    if( this.innerWidth < 650){
+      alert("right")
+    }
+  }
+
+  swipeLeft(){
+    if( this.innerWidth < 650) {
+      alert("left")
     }
   }
 }

@@ -48,15 +48,14 @@
     }
 
     @media screen and (max-width: 650px) {
-      padding-top: 2.2vh;
+      padding-top: 2vh;
       padding-left: 0;
       padding-right: 0;
-
 
       display: grid;
       grid-template-columns: 1fr 1fr;
       grid-template-rows: 1fr 1fr 1fr 1fr;
-      grid-gap: 1.1vh;
+      grid-gap: 1vh;
     }
 
     .category_container {
@@ -78,6 +77,10 @@
 
         @media screen and (max-width: 1600px) {
           height: 12vh;
+        }
+
+        @media screen and (max-width: 650px) {
+          height: 11vh;
         }
       }
 

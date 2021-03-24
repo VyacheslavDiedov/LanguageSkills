@@ -9,14 +9,17 @@
   justify-content: center;
   align-items: center;
 
+
   background: url('/assets/img/Web Sign in.png') no-repeat center center;
   background-size: cover;
   position: fixed;
 
   @media screen and (max-width: 650px) {
+    padding-top: 15px;
     background: url('/assets/img/Phone Sign in.png') no-repeat center center;
     background-size: cover;
     position: fixed;
+    align-items: flex-start;
   }
 
   .main_window_container_language{
@@ -54,9 +57,11 @@
   position: fixed;
 
   @media screen and (max-width: 650px) {
+    padding-top: 15px;
     background: url('/assets/img/Phone Sign in.png') no-repeat center center;
     background-size: cover;
     position: fixed;
+    align-items: flex-start;
   }
 
   .main_window_container {
@@ -111,5 +116,30 @@
     background-color: #259FFC;
     color: #FFFFFF;
   }
+}
+
+.mobile_pagination_line_container{
+  @media screen and (min-width: 651px) {
+    display: none;
+  }
+
+  width: 82.6vw;
+  margin: 0 auto;
+
+  hr{
+    margin: 0;
+    height: 4px;
+    border-radius: 4px;
+  }
+
+  .first_line{
+    background-color: #D8D8D8;
+  }
+
+  .second_line{
+    margin-top: -5px;
+    background-color: #259FFC;
+  }
+
 }
 

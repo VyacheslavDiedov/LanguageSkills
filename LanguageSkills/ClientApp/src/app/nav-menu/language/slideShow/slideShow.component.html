@@ -10,9 +10,15 @@
             <img class="word_image" src="{{currentWord.wordImagePath}}" alt="">
             <img class="chevron_image" src="../../../../assets/icon/chevron_right_grey_54x54.png" alt="" (click)="nextSlide()">
           </div>
-          <div class="word_container">
-            <div class="word_native_container">{{currentWord.wordTranslationNativeName}}</div>
-            <div class="word_learned_container">{{currentWord.wordTranslationLearnedName}}</div>
+          <div class="word_dashboard_container">
+            <div class="word_chevron_container">
+              <img class="chevron_mobile" src="../../../../assets/icon/chevron_left_grey_54x54.png" alt="" (click)="prevSlide()">
+              <div class="word_container">
+                <div class="word_native_container">{{currentWord.wordTranslationNativeName}}</div>
+                <div class="word_learned_container">{{currentWord.wordTranslationLearnedName}}</div>
+              </div>
+              <img class="chevron_mobile" src="../../../../assets/icon/chevron_right_grey_54x54.png" alt="" (click)="nextSlide()">
+            </div>
             <div class="dashboard_container">
               <a data-title="Start slideshow">
                 <img src="../../../../assets/icon/play.png" >
@@ -31,6 +37,7 @@
               </a>
             </div>
           </div>
+
         </div>
       </div>
     </div>
