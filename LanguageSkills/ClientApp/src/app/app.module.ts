@@ -10,6 +10,7 @@ import {CategoryComponent} from './nav-menu/language/category/category.component
 import {SubCategoryComponent} from './nav-menu/language/subCategory/subCategory.component';
 import {SlideShowComponent} from './nav-menu/language/slideShow/slideShow.component';
 import {BreadcrumbComponent} from '../common/breadcrumb/breadcrumb.component';
+import {TestsComponent} from './nav-menu/language/tests/tests.component';
 
 
 @NgModule({
@@ -20,7 +21,8 @@ import {BreadcrumbComponent} from '../common/breadcrumb/breadcrumb.component';
     CategoryComponent,
     SubCategoryComponent,
     SlideShowComponent,
-    BreadcrumbComponent
+    BreadcrumbComponent,
+    TestsComponent,
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
@@ -45,14 +47,21 @@ import {BreadcrumbComponent} from '../common/breadcrumb/breadcrumb.component';
                   component: SubCategoryComponent,
                   data: {
                     breadcrumb: ''
-                  },
-              children: [
-                {
-                  path: 'slideShow/:idSubCategory/:subCategoryName',
-                  component: SlideShowComponent,
-                  data: {
-                    breadcrumb: ''
-                  },
+                  }, children: [
+                    {
+                      path: 'slideShow/:idSubCategory/:subCategoryName',
+                      component: SlideShowComponent,
+                      data: {
+                        breadcrumb: ''
+                      }, children: [
+                        {
+                        path: 'tests/:idSubCategoryTest/:subCategoryNameTest',
+                        component: TestsComponent,
+                        data: {
+                          breadcrumb: 'Tests'
+                        },
+                    }
+                  ]
                 }
               ]
             }
@@ -60,13 +69,6 @@ import {BreadcrumbComponent} from '../common/breadcrumb/breadcrumb.component';
       ],
     },
     ]),
-    //todo delete it after doing children
-    // RouterModule.forRoot([
-    //   {path: '', component: SelectLanguageComponent, pathMatch: 'full'},
-    //   {path: 'category/:idLanguageToLearned', component: CategoryComponent },
-    //   {path: 'subCategory/:idCategory/:categoryName', component: SubCategoryComponent },
-    //   {path: 'slideShow/:idSubCategory/:subCategoryName', component: SlideShowComponent }
-    // ])
 ],
   providers: [],
   bootstrap: [AppComponent]

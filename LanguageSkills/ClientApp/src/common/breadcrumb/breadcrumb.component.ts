@@ -34,8 +34,9 @@ export class BreadcrumbComponent implements OnInit {
 
     const lastRoutePart = path.split('/').pop();
     const isCategory = lastRoutePart.includes(':idLanguageToLearned');
+    const isTest = lastRoutePart.includes(':subCategoryNameTest');
     const isDynamicRoute = lastRoutePart.startsWith(':');
-    if(isDynamicRoute && !!route.snapshot && !isCategory) {
+    if(isDynamicRoute && !!route.snapshot && (!isCategory && !isTest)) {
       const paramName = lastRoutePart.split(':')[1];
       label = route.snapshot.params[paramName];
     }

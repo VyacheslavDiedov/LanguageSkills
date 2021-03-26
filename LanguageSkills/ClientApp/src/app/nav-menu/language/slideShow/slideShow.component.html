@@ -26,10 +26,10 @@
               <a data-title="Next word">
                 <img src="../../../../assets/icon/swipe.png" alt="">
               </a>
-                <img *ngIf="true; else activeTest" src="../../../../assets/icon/test.png" alt="">
+                <img *ngIf="false; else activeTest" src="../../../../assets/icon/test.png" alt="">
               <ng-template #activeTest>
-                <a data-title="Start test">
-                  <img  src="../../../../assets/icon/testActive.png" alt="">
+                <a data-title="Start test" [routerLink]="['./tests', subCategoryId, subCategoryName]">
+                  <img  src="../../../../assets/icon/testActive.png" >
                 </a>
               </ng-template>
               <a data-title="Start over">
@@ -43,4 +43,5 @@
     </div>
   </section>
 </ng-template>
+<router-outlet></router-outlet>
 
