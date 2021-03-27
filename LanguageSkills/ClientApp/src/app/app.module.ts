@@ -1,33 +1,75 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { HttpClientModule } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
-
 import { AppComponent } from './app.component';
 import { NavMenuComponent } from './nav-menu/nav-menu.component';
-import { HomeComponent } from './home/home.component';
-import { CounterComponent } from './counter/counter.component';
-import { FetchDataComponent } from './fetch-data/fetch-data.component';
+import {SelectLanguageComponent} from './nav-menu/language/select-language.component';
+import {CategoryComponent} from './nav-menu/language/category/category.component';
+import {SubCategoryComponent} from './nav-menu/language/subCategory/subCategory.component';
+import {SlideShowComponent} from './nav-menu/language/slideShow/slideShow.component';
+import {BreadcrumbComponent} from '../common/breadcrumb/breadcrumb.component';
+import {TestsComponent} from './nav-menu/language/tests/tests.component';
+
 
 @NgModule({
   declarations: [
     AppComponent,
     NavMenuComponent,
-    HomeComponent,
-    CounterComponent,
-    FetchDataComponent
+    SelectLanguageComponent,
+    CategoryComponent,
+    SubCategoryComponent,
+    SlideShowComponent,
+    BreadcrumbComponent,
+    TestsComponent,
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
     HttpClientModule,
     FormsModule,
     RouterModule.forRoot([
-      { path: '', component: HomeComponent, pathMatch: 'full' },
-      { path: 'counter', component: CounterComponent },
-      { path: 'fetch-data', component: FetchDataComponent },
-    ])
-  ],
+    {
+      path: '',
+      component: SelectLanguageComponent,
+      data:{
+        breadcrumb: 'Select language'
+      },
+      children:[
+        {
+          path: 'category/:idLanguageToLearned',
+          component: CategoryComponent,
+          data: {
+            breadcrumb: 'Category',
+          }, children: [
+            {
+                  path: 'subCategory/:idCategory/:categoryName',
+                  component: SubCategoryComponent,
+                  data: {
+                    breadcrumb: ''
+                  }, children: [
+                    {
+                      path: 'slideShow/:idSubCategory/:subCategoryName',
+                      component: SlideShowComponent,
+                      data: {
+                        breadcrumb: ''
+                      }, children: [
+                        {
+                        path: 'tests/:idSubCategoryTest/:subCategoryNameTest',
+                        component: TestsComponent,
+                        data: {
+                          breadcrumb: 'Tests'
+                        },
+                    }
+                  ]
+                }
+              ]
+            }
+          ]}
+      ],
+    },
+    ]),
+],
   providers: [],
   bootstrap: [AppComponent]
 })

@@ -25,6 +25,8 @@
     "aspnet-prerendering": "^3.0.1",
     "bootstrap": "^4.3.1",
     "core-js": "^3.3.3",
+    "hammer-timejs": "^1.1.0",
+    "hammerjs": "^2.0.8",
     "jquery": "3.4.1",
     "node-sass": "^4.12.0",
     "oidc-client": "^1.9.1",
