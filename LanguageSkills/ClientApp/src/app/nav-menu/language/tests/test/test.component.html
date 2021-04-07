@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+
+<section class="main_container">
+  <div class="main_window_container">
+    <div class="test_container" [ngSwitch]="testName" >
+      <div class="test_header_container">
+        <div class="title_container">{{subCategoryName + " Tests"}} </div>
+        <div class="count_of_question">3/21</div>
+        <div><span
+          class="circle_correct_answer" *ngFor="let testWithTranslation of testWithTranslations; index as i"
+          [ngStyle]="{'background-color': (testWithTranslation.isCorrect == null) ? '#D8D8D8' :
+                 (testWithTranslation.isCorrect) ? '#00CC83' : '#EE4444' }"
+        ></span></div>
+      </div>
+
+      <!-- #region Test1 -->
+        <div *ngSwitchCase="'one from two'" class="test1_container">
+          <div class="test1_image_container">
+            <img src="../../../../../assets/img/Ukraine.jpg" alt="">
+            <img src="../../../../../assets/img/Ukraine.jpg" alt="">
+          </div>
+          <div class="learn_word_test1">Footbal</div>
+        </div>
+      <!-- #endregion -->
+
+      <!-- #region Test2 -->
+        <div *ngSwitchCase="'one from four'" class="test2_container">
+        <div class="test2_image_container">
+          <img src="../../../../../assets/img/Ukraine.jpg" alt="">
+          <img src="../../../../../assets/img/Ukraine.jpg" alt="">
+          <img src="../../../../../assets/img/Ukraine.jpg" alt="">
+          <img src="../../../../../assets/img/Ukraine.jpg" alt="">
+        </div>
+        <div class="learn_word_test2">Footbal</div>
+      </div>
+      <!-- #endregion -->
+
+      <!-- #region Test3 -->
+        <div *ngSwitchCase="'one from four: listening'" class="test3_container">
+          <div class="test3_image_container">
+            <img src="../../../../../assets/img/Ukraine.jpg" alt="">
+            <img src="../../../../../assets/img/Ukraine.jpg" alt="">
+            <img src="../../../../../assets/img/Ukraine.jpg" alt="">
+            <img src="../../../../../assets/img/Ukraine.jpg" alt="">
+          </div>
+        <div class="learn_sound_test3">
+          <span>Play</span>
+          <img src="../../../../../assets/icon/volume.png" alt="">
+        </div>
+      </div>
+      <!-- #endregion -->
+
+      <!-- #region Test4 -->
+        <div *ngSwitchCase="'one from four: text'" class="test4_container">
+        <div class="test4_image_container">
+          <img src="../../../../../assets/img/Ukraine.jpg" alt="">
+        </div>
+        <div class="learn_test4">
+          <div>Play</div>
+          <div>Play</div>
+          <div>Play</div>
+          <div>Play</div>
+        </div>
+      </div>
+      <!-- #endregion -->
+
+      <!-- #region Test5 -->
+        <div *ngSwitchCase="'True\\False'" class="test5_container">
+          <div class="test5_image_container">
+            <img src="../../../../../assets/img/Ukraine.jpg" alt="">
+          </div>
+
+          <div class="learn_word_test5">Football</div>
+
+          <div class="learn_test5">
+            <div>True</div>
+            <div>False</div>
+          </div>
+        </div>
+      <!-- #endregion -->
+
+      <!-- #region Test6 -->
+        <div *ngSwitchCase="'Spell with picture'" class="test6_container">
+        <div class="test6_image_container">
+          <img src="../../../../../assets/img/Ukraine.jpg" alt="">
+        </div>
+
+        <textarea class="spell_word_test6" placeholder="Enter word" rows="1"></textarea>
+
+        <div class="learn_test6">
+          <div>Okay</div>
+        </div>
+      </div>
+      <!-- #endregion -->
+
+      <!-- #region Test7 -->
+        <div *ngSwitchCase="'Spell with voice'" class="test7_container">
+        <div class="test7_image_container">
+          <img src="../../../../../assets/svg/volume%20_big.svg" alt="">
+          <div>Football</div>
+        </div>
+
+        <textarea class="spell_word_test7" placeholder="Enter word" rows="1"></textarea>
+
+        <div class="learn_test7">
+          <div>Okay</div>
+        </div>
+      </div>
+      <!-- #endregion -->
+
+      <!-- #region Test8 -->
+        <div *ngSwitchCase="'Translation - text'" class="test8_container">
+        <div class="test8_learned_word_container">
+          <div>Football</div>
+        </div>
+        <div class="learn_test8">
+          <div>Play</div>
+          <div>Play</div>
+          <div>Play</div>
+          <div>Play</div>
+        </div>
+      </div>
+      <!-- #endregion -->
+
+      <!-- #region Test9 -->
+        <div *ngSwitchCase="'Translation - pronunciation'" class="test9_container">
+          <div class="test9_image_container">
+            <img src="../../../../../assets/svg/volume%20_big.svg" alt="">
+          </div>
+
+          <div class="learn_test9">
+            <div>Play</div>
+            <div>Play</div>
+            <div>Play</div>
+            <div>Play</div>
+          </div>
+        </div>
+      <!-- #endregion -->
+
+      <!-- #region Test10 -->
+        <div *ngSwitchCase="'Find pair - translation'" class="test10_container">
+          <div class="item_container_test10">
+            <div>item1</div>
+            <div>item2</div>
+            <div>item3</div>
+            <div>item4</div>
+          </div>
+
+          <div>
+            <canvas id="myCanvas" width={{canvasWidth}} height="280">
+              Ваш браузер не поддерживает Canvas
+            </canvas>
+          </div>
+
+          <div class="item_container_test10">
+            <div>item1</div>
+            <div>item2</div>
+            <div>item3</div>
+            <div>item4</div>
+          </div>
+
+        </div>
+
+      <!--Todo delete it-->
+      <div *ngSwitchCase="'Find pair - translation'">
+        <button (click)="drawLine('4vs1', false)">Draw rectable</button>
+      </div>
+      <!-- #endregion -->
+
+      <div class="dashboard_container">
+          <img src="../../../../assets/icon/play-grey.png" >
+          <img src="../../../../assets/icon/swipe-grey.png" >
+          <img  src="../../../../assets/icon/testActive.png" >
+          <img src="../../../../assets/icon/restart.png" >
+     </div>
+    </div>
+  </div>
+</section>

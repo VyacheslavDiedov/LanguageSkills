@@ -4,7 +4,8 @@
       <div class="title_container">{{subCategoryName + " Tests"}} </div>
       <div class="items_container">
         <div *ngFor="let testWithTranslation of testWithTranslations; index as i" >
-          <div class="test_container" [routerLink]="['./slideShow']">
+          <div class="test_container" [routerLink]="['./test', subCategoryId, subCategoryName, testWithTranslation.id,
+                                                  testWithTranslation.testName]">
             <img src='{{ "../../../../assets/icon/grey/Test" + (i + 1) + ".png" }}' alt="">
             <div class="test_name_container">
               <div>{{testWithTranslation.testName}}</div>
@@ -19,4 +20,5 @@
     </div>
   </div>
 </section>
+<router-outlet></router-outlet>
 

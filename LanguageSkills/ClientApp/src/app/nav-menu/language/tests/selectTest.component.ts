@@ -12,10 +12,10 @@ export class TestWithTranslation{
 }
 @Component({
   selector: 'app-select-test-page',
-  templateUrl: './tests.component.html',
-  styleUrls: ['./tests.component.scss']
+  templateUrl: './selectTest.component.html',
+  styleUrls: ['./selectTest.component.scss']
 })
-export class TestsComponent implements OnInit {
+export class SelectTestComponent implements OnInit {
   subCategoryId: number;
   subCategoryName: string;
   innerWidth: number;

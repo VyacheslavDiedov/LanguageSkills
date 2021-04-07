@@ -10,7 +10,8 @@ import {CategoryComponent} from './nav-menu/language/category/category.component
 import {SubCategoryComponent} from './nav-menu/language/subCategory/subCategory.component';
 import {SlideShowComponent} from './nav-menu/language/slideShow/slideShow.component';
 import {BreadcrumbComponent} from '../common/breadcrumb/breadcrumb.component';
-import {TestsComponent} from './nav-menu/language/tests/tests.component';
+import {SelectTestComponent} from './nav-menu/language/tests/selectTest.component';
+import {TestComponent} from './nav-menu/language/tests/test/test.component';
 
 
 @NgModule({
@@ -22,7 +23,8 @@ import {TestsComponent} from './nav-menu/language/tests/tests.component';
     SubCategoryComponent,
     SlideShowComponent,
     BreadcrumbComponent,
-    TestsComponent,
+    SelectTestComponent,
+    TestComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
@@ -55,11 +57,19 @@ import {TestsComponent} from './nav-menu/language/tests/tests.component';
                         breadcrumb: ''
                       }, children: [
                         {
-                        path: 'tests/:idSubCategoryTest/:subCategoryNameTest',
-                        component: TestsComponent,
+                        path: 'select-test/:idSubCategoryTest/:subCategoryNameTest',
+                        component: SelectTestComponent,
                         data: {
                           breadcrumb: 'Tests'
-                        },
+                        },children: [
+                            {
+                              path: 'test/:idSubCategoryTest/:subCategoryNameTest/:idTest/:testName',
+                              component: TestComponent,
+                              data: {
+                                breadcrumb: ''
+                              },
+                            }
+                          ]
                     }
                   ]
                 }

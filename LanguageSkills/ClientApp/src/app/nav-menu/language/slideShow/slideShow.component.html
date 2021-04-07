@@ -28,7 +28,7 @@
               </a>
                 <img *ngIf="false; else activeTest" src="../../../../assets/icon/test.png" alt="">
               <ng-template #activeTest>
-                <a data-title="Start test" [routerLink]="['./tests', subCategoryId, subCategoryName]">
+                <a data-title="Start test" [routerLink]="['./select-test', subCategoryId, subCategoryName]">
                   <img  src="../../../../assets/icon/testActive.png" >
                 </a>
               </ng-template>
