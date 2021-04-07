@@ -116,5 +116,22 @@ namespace BusinessLogicLayer.Translation
 
             return wordsWithTranslations;
         }
+
+        public List<ItemWithTranslation> GetTestsWithTranslations()
+        {
+            List<Test> allTestWithTranslations = _manageAccessToEntity.Tests.GetAllTestWithTranslations();
+
+            MapperConfiguration config = new MapperConfiguration(cfg => cfg.CreateMap<Test, ItemWithTranslation>()
+                .ForMember("ItemId", opt => opt.MapFrom(src => src.Id))
+                .ForMember("ItemName", opt => opt.MapFrom(src => src.TestName))
+                .ForMember("ItemTranslationNativeName", opt => opt.MapFrom(src => src.TestTranslations
+                    .FirstOrDefault(wt => wt.TestId == src.Id && wt.LanguageId == _languageNativeTranslationId).TestTranslationName))
+                .ForMember("ItemTranslationLearnedName", opt => opt.MapFrom(src => src.TestTranslations
+                    .FirstOrDefault(wt => wt.TestId == src.Id && wt.LanguageId == _languageToLearnId).TestTranslationName)));
+            Mapper mapper = new Mapper(config);
+            List<ItemWithTranslation> testsWithTranslations = mapper.Map<List<Test>, List<ItemWithTranslation>>(allTestWithTranslations);
+
+            return testsWithTranslations;
+        }
     }
 }

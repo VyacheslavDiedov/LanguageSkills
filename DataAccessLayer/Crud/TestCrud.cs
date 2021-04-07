@@ -31,6 +31,26 @@ namespace DataAccessLayer.Crud
         }
 
         /// <summary>
+        /// Get all tests with translations from table DB
+        /// </summary>
+        /// <returns>List of tests with translations</returns>
+        public List<Test> GetAllTestWithTranslations()
+        {
+            try
+            {
+                using (LanguageSkillsDBContext db = new LanguageSkillsDBContext())
+                {
+                    return db.Tests.Include(l => l.TestTranslations).ToList();
+                }
+            }
+            catch (Exception e)
+            {
+                ExceptionHandler.ShowInConsole(this.GetType().Name, MethodBase.GetCurrentMethod().Name, e);
+                return new List<Test>();
+            }
+        }
+
+        /// <summary>
         /// Get test by Id from table DB
         /// </summary>
         /// <param name="id">Test Id</param>
