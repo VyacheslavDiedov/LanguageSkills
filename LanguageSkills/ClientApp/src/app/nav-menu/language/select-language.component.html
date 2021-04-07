@@ -1,0 +1,16 @@
+<section class="main_container_language">
+  <div class="main_window_container_language">
+    <div class="select_language_container" >
+      <div class="title_container">Select the language you want to learn</div>
+        <div class="items_container">
+          <div *ngFor="let language of languages">
+            <div class="language_container" [routerLink]="['/category', language.id]" >
+              <img src= "{{language.imagePath}}" alt="">
+              <span class ="language_name_container">{{language.languageName}}</span>
+            </div>
+          </div>
+      </div>
+    </div>
+  </div>
+</section>
+<router-outlet></router-outlet>

@@ -1,44 +1,36 @@
-<header>
-  <nav
-    class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3"
-  >
-    <div class="container">
-      <a class="navbar-brand" [routerLink]="['/']">LanguageSkills</a>
-      <button
-        class="navbar-toggler"
-        type="button"
-        data-toggle="collapse"
-        data-target=".navbar-collapse"
-        aria-label="Toggle navigation"
-        [attr.aria-expanded]="isExpanded"
-        (click)="toggle()"
-      >
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div
-        class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse"
-        [ngClass]="{ show: isExpanded }"
-      >
-        <ul class="navbar-nav flex-grow">
-          <li
-            class="nav-item"
-            [routerLinkActive]="['link-active']"
-            [routerLinkActiveOptions]="{ exact: true }"
-          >
-            <a class="nav-link text-dark" [routerLink]="['/']">Home</a>
-          </li>
-          <li class="nav-item" [routerLinkActive]="['link-active']">
-            <a class="nav-link text-dark" [routerLink]="['/counter']"
-              >Counter</a
-            >
-          </li>
-          <li class="nav-item" [routerLinkActive]="['link-active']">
-            <a class="nav-link text-dark" [routerLink]="['/fetch-data']"
-              >Fetch data</a
-            >
-          </li>
-        </ul>
+<header class="header_container">
+  <div class="content_container">
+
+    <div class="brand_breadcrumb_container">
+      <div class="header_brand" [routerLink]="['']">
+        Language.Skills
+
       </div>
+
+      <app-breadcrumb></app-breadcrumb>
     </div>
-  </nav>
+
+
+
+    <div class="header_button_container">
+
+      <div class="language_header_container">
+        <span>
+          <img src="../../assets/icon/Flag_of_the_United_Kingdom.png">
+        </span>
+        <span>EN</span>
+      </div >
+
+      <span class="header_settings">
+        <img src="../../assets/icon/Gear.png" alt="settings">
+      </span>
+
+      <span class="header_profile_tool">
+        <img src="../../assets/svg/person-4.svg" alt="profile">
+      </span>
+
+    </div>
+  </div>
 </header>
+
+
