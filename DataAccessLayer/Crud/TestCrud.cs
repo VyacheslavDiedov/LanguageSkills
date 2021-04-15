@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reflection;
 using DataAccessLayer.DataBaseModels;
 using DataAccessLayer.Helpers;
+using DataAccessLayer.ViewModels.Pagination;
 using Microsoft.EntityFrameworkCore;
 
 namespace DataAccessLayer.Crud
@@ -47,6 +48,31 @@ namespace DataAccessLayer.Crud
             {
                 ExceptionHandler.ShowInConsole(this.GetType().Name, MethodBase.GetCurrentMethod().Name, e);
                 return new List<Test>();
+            }
+        }
+
+        /// <summary>
+        /// Get the page of tests with translations
+        /// </summary>
+        /// <param name="pageNumber">Number of page</param>
+        /// <param name="pageSize">Size of page</param>
+        /// <returns>List of tests with translations and info about pagination</returns>
+        public PagedResult<Test> GetPagedTestsWithTranslations(int pageNumber, int pageSize)
+        {
+            PaginationFilter<Test> paginationFilter = new PaginationFilter<Test>();
+            try
+            {
+                using (LanguageSkillsDBContext db = new LanguageSkillsDBContext())
+                {
+                    List<Test> testsWithTranslation =
+                        db.Tests.Include(l => l.TestTranslations).ToList();
+                    return paginationFilter.GetPagedItems(pageNumber, pageSize, testsWithTranslation);
+                }
+            }
+            catch (Exception e)
+            {
+                ExceptionHandler.ShowInConsole(this.GetType().Name, MethodBase.GetCurrentMethod().Name, e);
+                return new PagedResult<Test>();
             }
         }
 

@@ -1,14 +1,14 @@
 <section class="main_container">
   <div class="main_window_container">
-    <div class="tests_container" >
+    <div class="tests_container" (swiperight)="swipeLeft()" (swipeleft)="swipeRight()">
       <div class="title_container">{{subCategoryName + " Tests"}} </div>
-      <div class="items_container">
-        <div *ngFor="let testWithTranslation of testWithTranslations; index as i" >
-          <div class="test_container" [routerLink]="['./test', subCategoryId, subCategoryName, testWithTranslation.id,
-                                                  testWithTranslation.testName]">
-            <img src='{{ "../../../../assets/icon/grey/Test" + (i + 1) + ".png" }}' alt="">
+      <div class="items_container" >
+        <div *ngFor="let testWithTranslation of testsData; index as i" >
+          <div class="test_container" [routerLink]="['./test', subCategoryId, subCategoryName, testWithTranslation.itemId,
+                                                  testWithTranslation.itemName]">
+            <img src='{{ "../../../../assets/icon/grey/Test" + (i + 1 + ((currentPageNumber  - 1) * 8)) + ".png" }}' alt="">
             <div class="test_name_container">
-              <div>{{testWithTranslation.testName}}</div>
+              <div>{{testWithTranslation.itemTranslationLearnedName}}</div>
               <div class="test_name_image_container">
                 <img *ngIf="!isSuccessfullyCompleted" src="../../../../assets/svg/Контур%202082_grey.svg">
                 <img *ngIf="isSuccessfullyCompleted" src="../../../../assets/svg/Контур%202082.svg">
@@ -17,6 +17,10 @@
           </div>
         </div>
       </div>
+    </div>
+    <div class="mobile_pagination_line_container">
+      <hr class="first_line" >
+      <hr [style.width]="widthMobilePagination + '%'" class="second_line" >
     </div>
   </div>
 </section>

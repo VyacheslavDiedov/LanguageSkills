@@ -1,75 +1,96 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, DoCheck } from '@angular/core';
 import { ActivatedRoute} from '@angular/router';
-
-
-export class WordWithTranslation{
-  id: number;
-  wordImagePath: string;
-  wordTranslationNativeName: string;
-  wordTranslationLearnedName: string;
-}
+import {ItemWithTranslation} from '../../../../modules/ItemWithTranslation';
+import {WordApiService} from '../../../../services/word-api.service';
 
 @Component({
   selector: 'app-slide-show-page',
   templateUrl: './slideShow.component.html',
   styleUrls: ['./slideShow.component.scss']
 })
-export class SlideShowComponent implements OnInit {
+
+export class SlideShowComponent implements OnInit, DoCheck {
+  wordData: Array<ItemWithTranslation>;
   subCategoryId: number;
   subCategoryName: string;
-  currentWord: WordWithTranslation;
+  currentWord: ItemWithTranslation;
+  currentIterator: number;
+  isAutomaticallySlideShowStarted: boolean;
+  isTest: boolean;
 
-  constructor(private activateRoute: ActivatedRoute){
-    this.subCategoryId = activateRoute.snapshot.params['idSubCategory']
+  constructor(private activateRoute: ActivatedRoute, public APIService: WordApiService){
+    this.subCategoryId = activateRoute.snapshot.params['idSubCategory'];
     this.subCategoryName = activateRoute.snapshot.params['subCategoryName'];
+    this.wordData = new Array<ItemWithTranslation>();
+    this.currentIterator = 0;
+    this.isAutomaticallySlideShowStarted = false;
+    this.isTest = false;
   }
 
   ngOnInit() {
-    this.wordWithTranslations.forEach((wordWithTranslation, i) => {
-      setTimeout(() =>{
-        this.currentWord = wordWithTranslation;
-      }, i * 3000);
-    })
+    this.loadData(this.subCategoryId);
+  }
+
+  loadData(subCategoryId){
+    this.APIService.getWord(subCategoryId)
+      .subscribe((data: ItemWithTranslation[]) => {
+        this.wordData = data;
+        this.slideShow(this.currentIterator);
+      });
+  }
+
+  slideShow(i){
+    if(i < this.wordData.length && i >= 0){
+      this.currentWord = this.wordData[i];
+    }
+  }
+
+  automaticallySlideShow(){
+    if(!this.isAutomaticallySlideShowStarted){
+      this.isAutomaticallySlideShowStarted = true;
+      this.wordData.forEach((wordWithTranslation, i) => {
+        setTimeout(() =>{
+          i = this.currentIterator;
+          this.slideShow(this.currentIterator);
+          this.incrementIterator();
+        }, i * 3000);
+      })
+    }else {
+      this.nextSlide();
+    }
+
   }
 
   nextSlide(){
-    alert("next");
+    this.incrementIterator();
+    this.slideShow(this.currentIterator);
   }
 
   prevSlide(){
-    alert("prev");
+    this.decrementIterator()
+    this.slideShow(this.currentIterator);
   }
 
-  public wordWithTranslations: WordWithTranslation[] = [
-    {id: 1, wordTranslationNativeName: 'Football', wordTranslationLearnedName: 'Футбол',
-      wordImagePath: '../../../../assets/img/Ukraine.jpg'},
-    {id: 2, wordTranslationNativeName: 'basketball', wordTranslationLearnedName: 'баскетбол',
-      wordImagePath: '../../../../assets/img/Ukraine.jpg'},
-    {id: 3, wordTranslationNativeName: 'volleyball', wordTranslationLearnedName: 'волейбол',
-      wordImagePath: '../../../../assets/img/Ukraine.jpg'},
-    {id: 4, wordTranslationNativeName: 'handball', wordTranslationLearnedName: 'гандбол',
-      wordImagePath: '../../../../assets/img/Ukraine.jpg'},
-    {id: 5, wordTranslationNativeName: 'rugby', wordTranslationLearnedName: 'регбі',
-      wordImagePath: '../../../../assets/img/Ukraine.jpg'},
-    {id: 6, wordTranslationNativeName: 'American football', wordTranslationLearnedName: 'американський футбол\n',
-      wordImagePath: '../../../../assets/img/Ukraine.jpg'},
-    {id: 7, wordTranslationNativeName: 'Football', wordTranslationLearnedName: 'Футбол',
-      wordImagePath: '../../../../assets/img/Ukraine.jpg'},
-    {id: 8, wordTranslationNativeName: 'Football', wordTranslationLearnedName: 'Футбол',
-      wordImagePath: '../../../../assets/img/Ukraine.jpg'},
-    {id: 9, wordTranslationNativeName: 'Football', wordTranslationLearnedName: 'Футбол',
-      wordImagePath: '../../../../assets/img/Ukraine.jpg'},
-    {id: 10, wordTranslationNativeName: 'Football', wordTranslationLearnedName: 'Футбол',
-      wordImagePath: '../../../../assets/img/Ukraine.jpg'},
-    {id: 11, wordTranslationNativeName: 'Football', wordTranslationLearnedName: 'Футбол',
-      wordImagePath: '../../../../assets/img/Ukraine.jpg'},
-    {id: 12, wordTranslationNativeName: 'Football', wordTranslationLearnedName: 'Футбол',
-      wordImagePath: '../../../../assets/img/Ukraine.jpg'},
-    {id: 13, wordTranslationNativeName: 'Football', wordTranslationLearnedName: 'Футбол',
-      wordImagePath: '../../../../assets/img/Ukraine.jpg'},
-    {id: 14, wordTranslationNativeName: 'Football', wordTranslationLearnedName: 'Футбол',
-      wordImagePath: '../../../../assets/img/Ukraine.jpg'},
-    {id: 15, wordTranslationNativeName: 'Football', wordTranslationLearnedName: 'Футбол',
-      wordImagePath: '../../../../assets/img/Ukraine.jpg'},
-  ];
+  incrementIterator(){
+    if(this.currentIterator < this.wordData.length - 1){
+      this.currentIterator++;
+    }
+  }
+
+  decrementIterator(){
+    if(this.currentIterator >= 0){
+      this.currentIterator--;
+    }
+  }
+
+  resetSlideShow(){
+    this.currentIterator = 0;
+    this.slideShow(this.currentIterator);
+  }
+
+  ngDoCheck() {
+    if (this.wordData.length != 0 && this.currentIterator > this.wordData.length - 5) {
+      this.isTest = true
+    }
+  }
 }

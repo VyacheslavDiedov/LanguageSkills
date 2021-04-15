@@ -22,15 +22,15 @@ namespace LanguageSkills.Controllers
         /// <returns>response status "OK" and list of categories with translation or status "NotFound" and error message</returns>
         [HttpGet]
         public ActionResult<PagedResult<ItemWithTranslation>> GetCategories(int languageToLearnId, 
-            int nativeLanguageId = 3, int pageNumber = 1,  int pageSize = 15)
+            int nativeLanguageId, int pageNumber,  int pageSize)
         {
             TranslationHandler translationHandler = new TranslationHandler(_manageAccessToEntity);
 
             PagedResult<ItemWithTranslation> allCategoriesWithTranslations = translationHandler
                 .GetCategoriesWithTranslations(nativeLanguageId, languageToLearnId, pageNumber, pageSize);
+
             if (allCategoriesWithTranslations.ItemsWithTranslations.Count != 0)
             {
-                
                 return Ok(allCategoriesWithTranslations);
             }
             

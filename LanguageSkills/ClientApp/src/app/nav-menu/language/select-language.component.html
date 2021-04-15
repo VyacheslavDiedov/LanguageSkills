@@ -3,10 +3,10 @@
     <div class="select_language_container" >
       <div class="title_container">Select the language you want to learn</div>
         <div class="items_container">
-          <div *ngFor="let language of languages">
-            <div class="language_container" [routerLink]="['/category', language.id]" >
-              <img src= "{{language.imagePath}}" alt="">
-              <span class ="language_name_container">{{language.languageName}}</span>
+          <div *ngFor="let language of languageData">
+            <div class="language_container" [routerLink]="['/category', language.itemId]" >
+              <img src= "{{language.itemImagePath}}" alt="">
+              <span class ="language_name_container">{{language.itemTranslationLearnedName}}</span>
             </div>
           </div>
       </div>

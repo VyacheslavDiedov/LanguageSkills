@@ -17,14 +17,12 @@ namespace LanguageSkills.Controllers
         /// </summary>
         /// <param name="categoryId">Category selected by the user</param>
         /// <param name="pageNumber">Number of page</param>
+        /// <param name="pageSize">Number of items on the page</param>
         /// <returns>response status "OK" and list of subCategories with translations or status "NotFound" and error message</returns>
         [HttpGet]
-        public ActionResult<PagedResult<ItemWithTranslation>> GetSubCategories(int categoryId, int pageNumber)
+        public ActionResult<PagedResult<ItemWithTranslation>> GetSubCategories(int categoryId, int pageNumber, int pageSize)
         {
             TranslationHandler translationHandler = new TranslationHandler(_manageAccessToEntity);
-           
-            //Count of items on the page
-            const int pageSize = 15;
 
             PagedResult<ItemWithTranslation> subCategoriesWithTranslationsByCategory = 
                 translationHandler.GetSubCategoriesWithTranslations(categoryId, pageNumber, pageSize);

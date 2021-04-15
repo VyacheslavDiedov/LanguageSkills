@@ -2,100 +2,98 @@ import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
 import 'hammerjs';
 import 'hammer-timejs';
-
-export class CategoryWithTranslation{
-  id: number;
-  categoryName: string;
-  categoryImagePath: string;
-  categoryTranslationLearnedName: string;
-}
+import {ItemWithTranslation} from '../../../../modules/ItemWithTranslation';
+import {CategoryApiService} from '../../../../services/category-api.service';
 
 @Component({
   selector: 'app-select-category-page',
   templateUrl: './category.component.html',
   styleUrls: ['./category.component.scss']
 })
-export class CategoryComponent implements OnInit{
-  idLanguageToLearned: number;
-  innerWidth: number;
-  categoryWithTranslations: CategoryWithTranslation[];
-  widthValue: number;
 
-  constructor(private activateRoute: ActivatedRoute){
+export class CategoryComponent implements OnInit{
+  categoryData: Array<ItemWithTranslation>;
+  pageInfo: {};
+  pagedPageNames: Array<number>;
+  nativeLanguageId: number;
+  idLanguageToLearned: number;
+  currentPageNumber: number;
+  pageSize: number;
+  totalPage: number;
+  innerWidth: number;
+  widthPagination: number;
+
+  constructor(private activateRoute: ActivatedRoute, public APIService: CategoryApiService){
+    this.categoryData = new Array<ItemWithTranslation>();
+    this.pageInfo = new Object();
+    this.pagedPageNames = new Array<number>();
     this.idLanguageToLearned = activateRoute.snapshot.params['idLanguageToLearned'];
+    this.pageSize = window.innerWidth > 650 ? 15 : 8;
+    this.currentPageNumber = 1;
+
+    //todo It will change after doing authorization
+    this.nativeLanguageId = 3;
     this.innerWidth = window.innerWidth;
-    this.widthValue = 25;
+    this.widthPagination = 1;
   }
 
   ngOnInit() {
-    //todo it will get from back end
-    if( this.innerWidth > 650){
-    this.categoryWithTranslations = [
-        {id: 1, categoryName: 'Nature and environment', categoryImagePath: '../../../../assets/img/Ukraine.jpg', categoryTranslationLearnedName: 'Nature and environment'},
-        {id: 2, categoryName: 'Animal', categoryImagePath: '../../../../assets/img/Ukraine.jpg', categoryTranslationLearnedName: 'Animal'},
-        {id: 3, categoryName: 'Animal', categoryImagePath: '../../../../assets/img/Ukraine.jpg', categoryTranslationLearnedName: 'Animal'},
-        {id: 4, categoryName: 'Animal', categoryImagePath: '../../../../assets/img/Ukraine.jpg', categoryTranslationLearnedName: 'Animal'},
-        {id: 5, categoryName: 'Animal', categoryImagePath: '../../../../assets/img/Ukraine.jpg', categoryTranslationLearnedName: 'Animal'},
-        {id: 6, categoryName: 'Animal', categoryImagePath: '../../../../assets/img/Ukraine.jpg', categoryTranslationLearnedName: 'Animal'},
-        {id: 7, categoryName: 'Animal', categoryImagePath: '../../../../assets/img/Ukraine.jpg', categoryTranslationLearnedName: 'Animal'},
-        {id: 8, categoryName: 'Animal', categoryImagePath: '../../../../assets/img/Ukraine.jpg', categoryTranslationLearnedName: 'Animal'},
-        {id: 9, categoryName: 'Animal', categoryImagePath: '../../../../assets/img/Ukraine.jpg', categoryTranslationLearnedName: 'Animal'},
-        {id: 10, categoryName: 'Animal', categoryImagePath: '../../../../assets/img/Ukraine.jpg', categoryTranslationLearnedName: 'Animal'},
-        {id: 11, categoryName: 'Animal', categoryImagePath: '../../../../assets/img/Ukraine.jpg', categoryTranslationLearnedName: 'Animal'},
-        {id: 12, categoryName: 'Animal', categoryImagePath: '../../../../assets/img/Ukraine.jpg', categoryTranslationLearnedName: 'Animal'},
-        {id: 13, categoryName: 'Animal', categoryImagePath: '../../../../assets/img/Ukraine.jpg', categoryTranslationLearnedName: 'Animal'},
-        {id: 14, categoryName: 'Animal', categoryImagePath: '../../../../assets/img/Ukraine.jpg', categoryTranslationLearnedName: 'Animal'},
-        {id: 15, categoryName: 'Animal', categoryImagePath: '../../../../assets/img/Ukraine.jpg', categoryTranslationLearnedName: 'Animal'},
-      ];
-    }else{
-      this.categoryWithTranslations = [
-        {id: 1, categoryName: 'Nature and environment', categoryImagePath: '../../../../assets/img/Ukraine.jpg', categoryTranslationLearnedName: 'Nature and environment'},
-        {id: 2, categoryName: 'Animal', categoryImagePath: '../../../../assets/img/Ukraine.jpg', categoryTranslationLearnedName: 'Animal'},
-        {id: 3, categoryName: 'Animal', categoryImagePath: '../../../../assets/img/Ukraine.jpg', categoryTranslationLearnedName: 'Animal'},
-        {id: 4, categoryName: 'Animal', categoryImagePath: '../../../../assets/img/Ukraine.jpg', categoryTranslationLearnedName: 'Animal'},
-        {id: 5, categoryName: 'Animal', categoryImagePath: '../../../../assets/img/Ukraine.jpg', categoryTranslationLearnedName: 'Animal'},
-        {id: 6, categoryName: 'Animal', categoryImagePath: '../../../../assets/img/Ukraine.jpg', categoryTranslationLearnedName: 'Animal'},
-        {id: 7, categoryName: 'Animal', categoryImagePath: '../../../../assets/img/Ukraine.jpg', categoryTranslationLearnedName: 'Animal'},
-        {id: 8, categoryName: 'Animal', categoryImagePath: '../../../../assets/img/Ukraine.jpg', categoryTranslationLearnedName: 'Animal'},
-      ];
+    this.loadData(this.idLanguageToLearned, this.nativeLanguageId, this.currentPageNumber, this.pageSize);
+  }
+
+  loadData(idLanguageToLearned, nativeLanguageId, pageNumber, pageSize){
+    this.APIService.getCategory(idLanguageToLearned, nativeLanguageId, pageNumber, pageSize)
+      .subscribe((data:{itemsWithTranslations, pageInfo}) => {
+        this.categoryData = data.itemsWithTranslations;
+        this.pageInfo = data.pageInfo;
+        this.currentPageNumber = data.pageInfo.pageNumber;
+        this.totalPage = data.pageInfo.totalPages;
+        this.makeArrayForPagination(this.pageInfo);
+        this.widthPagination = this.countSizeOfPagedLine(this.totalPage, this.currentPageNumber);
+      });
+  }
+
+  makeArrayForPagination(totalPage){
+    for (let i = 1; i <= totalPage.totalPages; i++){
+      this.pagedPageNames[i - 1] = i;
     }
   }
 
+  countSizeOfPagedLine(totalPage, currentPage){
+    return currentPage / totalPage * 100;
+  }
 
-
-  isActive(pageNumber) {
-    if (pageNumber === 2) {
-      return true;
-    } else {
-      return false;
-    }
+  isActivePage(pageNumber) {
+    return pageNumber === this.currentPageNumber ? true : false;
   }
 
   pageSelection(pageNumber) {
-    alert(pageNumber);
+    if(pageNumber !== this.currentPageNumber) {
+      this.loadData(this.idLanguageToLearned, this.nativeLanguageId, pageNumber, this.pageSize);
+    }
   }
 
   prevPage(pageNumber) {
     if (pageNumber > 1) {
-      alert(pageNumber - 1);
+      this.loadData(this.idLanguageToLearned, this.nativeLanguageId, pageNumber - 1, this.pageSize);
     }
   }
 
   nextPage(pageNumber) {
-    if (pageNumber < 4) {
-      alert(pageNumber + 1);
+    if (pageNumber < this.totalPage) {
+      this.loadData(this.idLanguageToLearned, this.nativeLanguageId, pageNumber + 1, this.pageSize);
     }
   }
 
   swipeRight(){
-    if( this.innerWidth < 650){
-      alert("right")
-    }
+      if (this.currentPageNumber <= this.totalPage) {
+        this.loadData(this.idLanguageToLearned, this.nativeLanguageId, this.currentPageNumber + 1, this.pageSize);
+      }
   }
 
   swipeLeft(){
-    if( this.innerWidth < 650) {
-      alert("left")
-    }
+      if (this.currentPageNumber > 1) {
+        this.loadData(this.idLanguageToLearned, this.nativeLanguageId, this.currentPageNumber - 1, this.pageSize);
+      }
   }
 }

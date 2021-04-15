@@ -117,21 +117,27 @@ namespace BusinessLogicLayer.Translation
             return wordsWithTranslations;
         }
 
-        public List<ItemWithTranslation> GetTestsWithTranslations()
+        public PagedResult<ItemWithTranslation> GetTestsWithTranslations(int pageNumber, int pageSize)
         {
-            List<Test> allTestWithTranslations = _manageAccessToEntity.Tests.GetAllTestWithTranslations();
+            PagedResult<Test> pagedTestsWithTranslations =
+                _manageAccessToEntity.Tests.GetPagedTestsWithTranslations(pageNumber, pageSize);
 
-            MapperConfiguration config = new MapperConfiguration(cfg => cfg.CreateMap<Test, ItemWithTranslation>()
+            MapperConfiguration config = new MapperConfiguration(cfg => cfg
+                .CreateMap<Test, ItemWithTranslation>()
                 .ForMember("ItemId", opt => opt.MapFrom(src => src.Id))
                 .ForMember("ItemName", opt => opt.MapFrom(src => src.TestName))
                 .ForMember("ItemTranslationNativeName", opt => opt.MapFrom(src => src.TestTranslations
-                    .FirstOrDefault(wt => wt.TestId == src.Id && wt.LanguageId == _languageNativeTranslationId).TestTranslationName))
+                    .FirstOrDefault(st => st.LanguageId == _languageNativeTranslationId).TestTranslationName))
                 .ForMember("ItemTranslationLearnedName", opt => opt.MapFrom(src => src.TestTranslations
-                    .FirstOrDefault(wt => wt.TestId == src.Id && wt.LanguageId == _languageToLearnId).TestTranslationName)));
+                    .FirstOrDefault(st => st.LanguageId == _languageToLearnId).TestTranslationName)));
             Mapper mapper = new Mapper(config);
-            List<ItemWithTranslation> testsWithTranslations = mapper.Map<List<Test>, List<ItemWithTranslation>>(allTestWithTranslations);
 
-            return testsWithTranslations;
+            return new PagedResult<ItemWithTranslation>()
+            {
+                PageInfo = pagedTestsWithTranslations.PageInfo,
+                ItemsWithTranslations =
+                    mapper.Map<List<Test>, List<ItemWithTranslation>>(pagedTestsWithTranslations.ItemsWithTranslations)
+            };
         }
     }
 }

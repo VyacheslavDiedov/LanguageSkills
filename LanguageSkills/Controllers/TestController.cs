@@ -2,6 +2,7 @@
 using BusinessLogicLayer;
 using BusinessLogicLayer.Translation;
 using BusinessLogicLayer.ViewModels;
+using DataAccessLayer.ViewModels.Pagination;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LanguageSkills.Controllers
@@ -13,21 +14,23 @@ namespace LanguageSkills.Controllers
         private readonly ManageAccessToEntity _manageAccessToEntity = new ManageAccessToEntity();
 
         /// <summary>
-        /// Get tests with translations
+        /// Get paged tests with translations
         /// </summary>
+        /// <param name="pageNumber">Number of page</param>
+        /// <param name="pageSize">Number of items on the page</param>
         /// <returns>response status "OK" and list of test with translations or status "NotFound" and error message</returns>
         [HttpGet]
-        public ActionResult<List<ItemWithTranslation>> GetTest()
+        public ActionResult<PagedResult<ItemWithTranslation>> GetPagedTest(int pageNumber, int pageSize)
         {
             TranslationHandler translationHandler = new TranslationHandler(_manageAccessToEntity);
-            List<ItemWithTranslation> testWithTranslations = translationHandler.GetTestsWithTranslations();
-            if (testWithTranslations.Count != 0)
+            PagedResult<ItemWithTranslation> pagedTestWithTranslations = translationHandler.GetTestsWithTranslations(pageNumber, pageSize);
+            if (pagedTestWithTranslations.ItemsWithTranslations.Count != 0)
             {
-                return Ok(testWithTranslations);
+                return Ok(pagedTestWithTranslations);
             }
             else
             {
-                return NotFound("Words don't exist");
+                return NotFound("Tests don't exist");
             }
         }
     }

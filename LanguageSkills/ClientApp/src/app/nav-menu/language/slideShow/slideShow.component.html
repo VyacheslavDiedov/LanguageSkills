@@ -7,32 +7,32 @@
         <div class="items_container">
           <div class="image_container">
             <img class="chevron_image" src="../../../../assets/icon/chevron_left_grey_54x54.png" alt="" (click)="prevSlide()">
-            <img class="word_image" src="{{currentWord.wordImagePath}}" alt="">
+            <img class="word_image" src="{{currentWord.itemImagePath}}" alt="">
             <img class="chevron_image" src="../../../../assets/icon/chevron_right_grey_54x54.png" alt="" (click)="nextSlide()">
           </div>
           <div class="word_dashboard_container">
             <div class="word_chevron_container">
               <img class="chevron_mobile" src="../../../../assets/icon/chevron_left_grey_54x54.png" alt="" (click)="prevSlide()">
               <div class="word_container">
-                <div class="word_native_container">{{currentWord.wordTranslationNativeName}}</div>
-                <div class="word_learned_container">{{currentWord.wordTranslationLearnedName}}</div>
+                <div class="word_native_container">{{currentWord.itemTranslationNativeName}}</div>
+                <div class="word_learned_container">{{currentWord.itemTranslationLearnedName}}</div>
               </div>
               <img class="chevron_mobile" src="../../../../assets/icon/chevron_right_grey_54x54.png" alt="" (click)="nextSlide()">
             </div>
-            <div class="dashboard_container">
-              <a data-title="Start slideshow">
+            <div class="dashboard_container" >
+              <a data-title="Start slideshow" (click)="automaticallySlideShow()">
                 <img src="../../../../assets/icon/play.png" >
               </a>
-              <a data-title="Next word">
+              <a data-title="Next word" (click)="nextSlide()">
                 <img src="../../../../assets/icon/swipe.png" alt="">
               </a>
-                <img *ngIf="false; else activeTest" src="../../../../assets/icon/test.png" alt="">
+                <img *ngIf="!isTest; else activeTest" src="../../../../assets/icon/test.png" alt="">
               <ng-template #activeTest>
                 <a data-title="Start test" [routerLink]="['./select-test', subCategoryId, subCategoryName]">
                   <img  src="../../../../assets/icon/testActive.png" >
                 </a>
               </ng-template>
-              <a data-title="Start over">
+              <a data-title="Start over" (click)="resetSlideShow()">
                 <img src="../../../../assets/icon/restart.png" alt="">
               </a>
             </div>

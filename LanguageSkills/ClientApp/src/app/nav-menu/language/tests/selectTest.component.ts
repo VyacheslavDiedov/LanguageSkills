@@ -2,71 +2,63 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute} from '@angular/router';
 import 'hammerjs';
 import 'hammer-timejs';
+import {ItemWithTranslation} from '../../../../modules/ItemWithTranslation';
+import {TestsApiService} from '../../../../services/tests-api.service';
 
-
-export class TestWithTranslation{
-  id: number;
-  testName: string;
-  testTranslationNativeName: string;
-  testTranslationLearnedName: string;
-}
 @Component({
   selector: 'app-select-test-page',
   templateUrl: './selectTest.component.html',
   styleUrls: ['./selectTest.component.scss']
 })
 export class SelectTestComponent implements OnInit {
+  testsData: Array<ItemWithTranslation>;
   subCategoryId: number;
   subCategoryName: string;
   innerWidth: number;
-  testWithTranslations: TestWithTranslation[];
   isSuccessfullyCompleted: boolean;
+  pageSize: number;
+  currentPageNumber: number;
+  totalPage: number;
+  widthMobilePagination: number;
 
-  constructor(private activateRoute: ActivatedRoute){
+  constructor(private activateRoute: ActivatedRoute, public APIService: TestsApiService){
     this.subCategoryId = activateRoute.snapshot.params['idSubCategoryTest'];
     this.subCategoryName = activateRoute.snapshot.params['subCategoryNameTest'];
     this.innerWidth = window.innerWidth;
     this.isSuccessfullyCompleted = true;
+    this.testsData = new Array<ItemWithTranslation>();
+    this.currentPageNumber = 1;
+    this.pageSize = this.innerWidth  > 650 ? 15 : 8;
+    this.widthMobilePagination = 1;
   }
 
   ngOnInit() {
-    //todo Make query
-    if( this.innerWidth > 650){
-      this.testWithTranslations = [
-        {id: 1, testName: 'one from two', testTranslationNativeName: 'Traducción - pronunciación', testTranslationLearnedName: '正確\\錯誤' },
-        {id: 2, testName: 'one from four', testTranslationNativeName: 'Traducción - pronunciación', testTranslationLearnedName: '正確\\錯誤' },
-        {id: 3, testName: 'one from four: text', testTranslationNativeName: 'Traducción - pronunciación', testTranslationLearnedName: '正確\\錯誤' },
-        {id: 4, testName: 'one from four: listening', testTranslationNativeName: 'Traducción - pronunciación', testTranslationLearnedName: '正確\\錯誤' },
-        {id: 5, testName: 'True\\False', testTranslationNativeName: 'Traducción - pronunciación', testTranslationLearnedName: '正確\\錯誤' },
-        {id: 6, testName: 'Spell with picture', testTranslationNativeName: 'Traducción - pronunciación', testTranslationLearnedName: '正確\\錯誤' },
-        {id: 7, testName: 'Spell with voice', testTranslationNativeName: 'Traducción - pronunciación', testTranslationLearnedName: '正確\\錯誤' },
-        {id: 8, testName: 'Translation - text', testTranslationNativeName: 'Traducción - pronunciación', testTranslationLearnedName: '正確\\錯誤' },
-        {id: 9, testName: 'Translation - pronunciation', testTranslationNativeName: 'Traducción - pronunciación', testTranslationLearnedName: '正確\\錯誤' },
-        {id: 10, testName: 'Find pair - translation', testTranslationNativeName: 'Traducción - pronunciación', testTranslationLearnedName: '正確\\錯誤' },
-      ];
-    }else {
-      this.testWithTranslations = [
-        {id: 1, testName: 'one from two', testTranslationNativeName: 'Traducción - pronunciación', testTranslationLearnedName: '正確\\錯誤' },
-        {id: 2, testName: 'one from four', testTranslationNativeName: 'Traducción - pronunciación', testTranslationLearnedName: '正確\\錯誤' },
-        {id: 3, testName: 'one from four: text', testTranslationNativeName: 'Traducción - pronunciación', testTranslationLearnedName: '正確\\錯誤' },
-        {id: 4, testName: 'one from four: listening', testTranslationNativeName: 'Traducción - pronunciación', testTranslationLearnedName: '正確\\錯誤' },
-        {id: 5, testName: 'True\\False', testTranslationNativeName: 'Traducción - pronunciación', testTranslationLearnedName: '正確\\錯誤' },
-        {id: 6, testName: 'Spell with picture', testTranslationNativeName: 'Traducción - pronunciación', testTranslationLearnedName: '正確\\錯誤' },
-        {id: 7, testName: 'Translation - text', testTranslationNativeName: 'Traducción - pronunciación', testTranslationLearnedName: '正確\\錯誤' },
-        {id: 8, testName: 'Translation - pronunciation', testTranslationNativeName: 'Traducción - pronunciación', testTranslationLearnedName: '正確\\錯誤' },
-      ];
-    }
+    this.loadData(this.currentPageNumber, this.pageSize);
+  }
+
+  loadData(currentPageNumber, pageSize){
+    this.APIService.getTests(currentPageNumber, pageSize)
+      .subscribe((data:{itemsWithTranslations, pageInfo}) => {
+      this.testsData = data.itemsWithTranslations;
+      this.currentPageNumber = data.pageInfo.pageNumber;
+      this.totalPage = data.pageInfo.totalPages;
+        this.widthMobilePagination = this.countSizeOfPagedLine(this.totalPage, this.currentPageNumber);
+      });
+  }
+
+  countSizeOfPagedLine(totalPage, currentPage){
+    return currentPage / totalPage * 100;
   }
 
   swipeRight(){
-    if( this.innerWidth < 650){
-      alert("right")
+    if (this.currentPageNumber <= this.totalPage) {
+      this.loadData(this.currentPageNumber + 1, this.pageSize);
     }
   }
 
   swipeLeft(){
-    if( this.innerWidth < 650) {
-      alert("left")
+    if (this.currentPageNumber > 1) {
+      this.loadData(this.currentPageNumber - 1, this.pageSize);
     }
   }
 }

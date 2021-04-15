@@ -3,29 +3,29 @@
     <div class="select_category_container" (swiperight)="swipeLeft()" (swipeleft)="swipeRight()">
       <div class="title_container">Category</div>
       <div class="items_container">
-        <div *ngFor="let categoryWithTranslation of categoryWithTranslations">
+        <div *ngFor="let categoryWithTranslation of categoryData">
           <div class="category_container" [routerLink]="['./subCategory',
-          categoryWithTranslation.id, categoryWithTranslation.categoryTranslationLearnedName]"  >
-            <img src= "{{categoryWithTranslation.categoryImagePath}}" alt="">
-            <span class ="category_name_container">{{categoryWithTranslation.categoryTranslationLearnedName}}</span>
+          categoryWithTranslation.itemId, categoryWithTranslation.itemName]"  >
+            <img src= "{{categoryWithTranslation.itemImagePath}}" alt="">
+            <span class ="category_name_container">{{categoryWithTranslation.itemTranslationLearnedName}}</span>
           </div>
         </div>
       </div>
     </div>
     <div class="pagination_container">
-      <img src="../../../../assets/icon/chevron_left_grey_54x54.png" (click)="prevPage(1)" alt="">
-      <div *ngFor="let i of [1, 2, 3, 4]"
+      <img src="../../../../assets/icon/chevron_left_grey_54x54.png" (click)="prevPage(currentPageNumber)" alt="">
+      <div *ngFor="let i of pagedPageNames"
            [class.pagination_page_count]="true"
-           [class.is_active]="isActive(i)"
+           [class.is_active]="isActivePage(i)"
            (click)="pageSelection(i)"
       >
         <div>{{i}}</div>
       </div>
-      <img src="../../../../assets/icon/chevron_right_grey_54x54.png" (click)="nextPage(1)" alt="">
+      <img src="../../../../assets/icon/chevron_right_grey_54x54.png" (click)="nextPage(currentPageNumber)" alt="">
     </div>
     <div class="mobile_pagination_line_container">
       <hr class="first_line" >
-      <hr [style.width]="widthValue + '%'" class="second_line" >
+      <hr [style.width]="widthPagination + '%'" class="second_line" >
     </div>
   </div>
 </section>

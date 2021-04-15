@@ -2,14 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute} from '@angular/router';
 import 'hammerjs';
 import 'hammer-timejs';
-
-
-export class SubCategoryWithTranslation{
-  id: number;
-  subCategoryName: string;
-  subCategoryImagePath: string;
-  subCategoryTranslationLearnedName: string;
-}
+import {ItemWithTranslation} from '../../../../modules/ItemWithTranslation';
+import {SubCategoryApiService} from '../../../../services/subCategory-api.service';
 
 @Component({
   selector: 'app-select-subCategory-page',
@@ -17,89 +11,87 @@ export class SubCategoryWithTranslation{
   styleUrls: ['./subCategory.component.scss']
 })
 export class SubCategoryComponent implements OnInit {
+  subCategoryData: Array<ItemWithTranslation>;
+  pageInfo: {};
+  pagedPageNames: Array<number>;
+  pageSize: number;
+  totalPage: number;
+  currentPageNumber: number;
   categoryId: number;
   categoryName: string;
   innerWidth: number;
-  subCategoryWithTranslations: SubCategoryWithTranslation[];
-  widthValue: number;
+  widthMobilePagination: number;
 
-  constructor(private activateRoute: ActivatedRoute){
+  constructor(private activateRoute: ActivatedRoute, public APIService: SubCategoryApiService) {
+    this.subCategoryData = new Array<ItemWithTranslation>();
+    this.pageInfo = new Object();
+    this.pagedPageNames = new Array<number>();
     this.categoryId = activateRoute.snapshot.params['idCategory'];
     this.categoryName = activateRoute.snapshot.params['categoryName'];
+    this.currentPageNumber = 1;
     this.innerWidth = window.innerWidth;
-    this.widthValue = 79;
+    this.widthMobilePagination = 1;
+    this.pageSize = this.innerWidth  > 650 ? 15 : 8;
   }
 
   ngOnInit() {
-    //todo Make query
-    if( this.innerWidth > 650){
-      this.subCategoryWithTranslations = [
-        {id: 1, subCategoryName: 'Kinds of sport 1', subCategoryImagePath: '../../../../assets/img/Ukraine.jpg', subCategoryTranslationLearnedName: 'Kinds of sport 1'},
-        {id: 2, subCategoryName: 'Kinds of sport 1', subCategoryImagePath: '../../../../assets/img/Ukraine.jpg', subCategoryTranslationLearnedName: 'Kinds of sport 1'},
-        {id: 3, subCategoryName: 'Kinds of sport 1', subCategoryImagePath: '../../../../assets/img/Ukraine.jpg', subCategoryTranslationLearnedName: 'Kinds of sport 1'},
-        {id: 4, subCategoryName: 'Kinds of sport 1', subCategoryImagePath: '../../../../assets/img/Ukraine.jpg', subCategoryTranslationLearnedName: 'Kinds of sport 1'},
-        {id: 5, subCategoryName: 'Kinds of sport 1', subCategoryImagePath: '../../../../assets/img/Ukraine.jpg', subCategoryTranslationLearnedName: 'Kinds of sport 1'},
-        {id: 6, subCategoryName: 'Kinds of sport 1', subCategoryImagePath: '../../../../assets/img/Ukraine.jpg', subCategoryTranslationLearnedName: 'Kinds of sport 1'},
-        {id: 7, subCategoryName: 'Kinds of sport 1', subCategoryImagePath: '../../../../assets/img/Ukraine.jpg', subCategoryTranslationLearnedName: 'Kinds of sport 1'},
-        {id: 8, subCategoryName: 'Kinds of sport 1', subCategoryImagePath: '../../../../assets/img/Ukraine.jpg', subCategoryTranslationLearnedName: 'Kinds of sport 1'},
-        {id: 9, subCategoryName: 'Kinds of sport 1', subCategoryImagePath: '../../../../assets/img/Ukraine.jpg', subCategoryTranslationLearnedName: 'Kinds of sport 1'},
-        {id: 10, subCategoryName: 'Kinds of sport 1', subCategoryImagePath: '../../../../assets/img/Ukraine.jpg', subCategoryTranslationLearnedName: 'Kinds of sport 1'},
-        {id: 11, subCategoryName: 'Kinds of sport 1', subCategoryImagePath: '../../../../assets/img/Ukraine.jpg', subCategoryTranslationLearnedName: 'Kinds of sport 1'},
-        {id: 12, subCategoryName: 'Kinds of sport 1', subCategoryImagePath: '../../../../assets/img/Ukraine.jpg', subCategoryTranslationLearnedName: 'Kinds of sport 1'},
-        {id: 13, subCategoryName: 'Kinds of sport 1', subCategoryImagePath: '../../../../assets/img/Ukraine.jpg', subCategoryTranslationLearnedName: 'Kinds of sport 1'},
-        {id: 14, subCategoryName: 'Kinds of sport 1', subCategoryImagePath: '../../../../assets/img/Ukraine.jpg', subCategoryTranslationLearnedName: 'Kinds of sport 1'},
-        {id: 15, subCategoryName: 'Kinds of sport 1', subCategoryImagePath: '../../../../assets/img/Ukraine.jpg', subCategoryTranslationLearnedName: 'Kinds of sport 1'},
-      ];
-    }else {
-      this.subCategoryWithTranslations = [
-        {id: 1, subCategoryName: 'Kinds of sport 1', subCategoryImagePath: '../../../../assets/img/Ukraine.jpg', subCategoryTranslationLearnedName: 'Kinds of sport 1'},
-        {id: 2, subCategoryName: 'Kinds of sport 1', subCategoryImagePath: '../../../../assets/img/Ukraine.jpg', subCategoryTranslationLearnedName: 'Kinds of sport 1'},
-        {id: 3, subCategoryName: 'Kinds of sport 1', subCategoryImagePath: '../../../../assets/img/Ukraine.jpg', subCategoryTranslationLearnedName: 'Kinds of sport 1'},
-        {id: 4, subCategoryName: 'Kinds of sport 1', subCategoryImagePath: '../../../../assets/img/Ukraine.jpg', subCategoryTranslationLearnedName: 'Kinds of sport 1'},
-        {id: 5, subCategoryName: 'Kinds of sport 1', subCategoryImagePath: '../../../../assets/img/Ukraine.jpg', subCategoryTranslationLearnedName: 'Kinds of sport 1'},
-        {id: 6, subCategoryName: 'Kinds of sport 1', subCategoryImagePath: '../../../../assets/img/Ukraine.jpg', subCategoryTranslationLearnedName: 'Kinds of sport 1'},
-        {id: 7, subCategoryName: 'Kinds of sport 1', subCategoryImagePath: '../../../../assets/img/Ukraine.jpg', subCategoryTranslationLearnedName: 'Kinds of sport 1'},
-        {id: 8, subCategoryName: 'Kinds of sport 1', subCategoryImagePath: '../../../../assets/img/Ukraine.jpg', subCategoryTranslationLearnedName: 'Kinds of sport 1'},
-      ];
-    }
-
+    this.loadData(this.categoryId, this.currentPageNumber, this.pageSize);
   }
 
+  loadData(categoryId, pageNumber, pageSize){
+    this.APIService.getSubCategory(categoryId, pageNumber, pageSize)
+      .subscribe((data:{itemsWithTranslations, pageInfo}) => {
+        this.subCategoryData = data.itemsWithTranslations;
+        this.pageInfo = data.pageInfo;
+        this.currentPageNumber = data.pageInfo.pageNumber;
+        this.totalPage = data.pageInfo.totalPages;
+        this.makeArrayForPagination(this.pageInfo);
+        this.widthMobilePagination = this.countSizeOfPagedLine(this.totalPage, this.currentPageNumber);
+      });
+  }
 
-
-  isActive(pageNumber) {
-    if (pageNumber === 2) {
-      return true;
-    } else {
-      return false;
+  makeArrayForPagination(totalPage){
+    for (let i = 1; i <= totalPage.totalPages; i++){
+      this.pagedPageNames[i - 1] = i;
     }
+  }
+
+  countSizeOfPagedLine(totalPage, currentPage){
+    return currentPage / totalPage * 100;
+  }
+
+  isActivePage(pageNumber) {
+    return pageNumber === this.currentPageNumber ? true : false;
   }
 
   pageSelection(pageNumber) {
-    alert(pageNumber);
+    if(pageNumber !== this.currentPageNumber){
+      this.loadData(this.categoryId, pageNumber, this.pageSize);
+    }
   }
 
   prevPage(pageNumber) {
     if (pageNumber > 1) {
-      alert(pageNumber - 1);
+      this.loadData(this.categoryId, pageNumber - 1, this.pageSize);
     }
   }
 
   nextPage(pageNumber) {
-    if (pageNumber < 4) {
-      alert(pageNumber + 1);
+    if (pageNumber < this.totalPage) {
+      this.loadData(this.categoryId, pageNumber + 1, this.pageSize);
     }
   }
 
   swipeRight(){
-    if( this.innerWidth < 650){
-      alert("right")
+    if (this.currentPageNumber <= this.totalPage) {
+      this.loadData(this.categoryId, this.currentPageNumber + 1, this.pageSize);
     }
   }
 
   swipeLeft(){
-    if( this.innerWidth < 650) {
-      alert("left")
+    if (this.currentPageNumber > 1) {
+      this.loadData(this.categoryId, this.currentPageNumber - 1, this.pageSize);
     }
   }
 }
+
