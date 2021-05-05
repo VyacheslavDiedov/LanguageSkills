@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using AutoMapper;
 using BusinessLogicLayer.Helpers;
@@ -138,6 +139,44 @@ namespace BusinessLogicLayer.Translation
                 ItemsWithTranslations =
                     mapper.Map<List<Test>, List<ItemWithTranslation>>(pagedTestsWithTranslations.ItemsWithTranslations)
             };
+        }
+
+        public List<ItemWithTranslation> GetWordsWithTranslationsForTest(int subCategoryId)
+        {
+            Random rand = new Random();
+            List<Word> wordsBySubCategory = _manageAccessToEntity.Words.GetWordsBySubCategoryId(subCategoryId);
+
+            //test always must be 21
+            while (wordsBySubCategory.Count != 21)
+            {
+                if (wordsBySubCategory.Count > 21)
+                {
+                    wordsBySubCategory.RemoveAt(rand.Next(wordsBySubCategory.Count));
+                }
+                else
+                {
+                    wordsBySubCategory.Add(wordsBySubCategory[rand.Next(wordsBySubCategory.Count)]);
+                }
+            }
+
+            MapperConfiguration config = new MapperConfiguration(cfg => cfg.CreateMap<Word, ItemWithTranslation>()
+                .ForMember("ItemId", opt => opt.MapFrom(src => src.Id))
+                .ForMember("ItemName", opt => opt.MapFrom(src => src.WordName))
+                .ForMember("ItemImagePath", opt => opt.MapFrom(src => src.WordImagePath))
+                .ForMember("ItemTranslationNativeName", opt => opt.MapFrom(src => src.WordTranslations
+                    .FirstOrDefault(wt => wt.WordId == src.Id && wt.LanguageId == _languageNativeTranslationId).WordTranslationName))
+                .ForMember("ItemTranslationNativePronunciationPath", opt => opt.MapFrom(src => src.WordTranslations
+                    .FirstOrDefault(wt => wt.WordId == src.Id && wt.LanguageId == _languageNativeTranslationId).PronunciationPath))
+                .ForMember("ItemTranslationLearnedName", opt => opt.MapFrom(src => src.WordTranslations
+                    .FirstOrDefault(wt => wt.WordId == src.Id && wt.LanguageId == _languageToLearnId).WordTranslationName))
+                .ForMember("ItemTranslationLearnedPronunciationPath", opt => opt.MapFrom(src => src.WordTranslations
+                    .FirstOrDefault(wt => wt.WordId == src.Id && wt.LanguageId == _languageToLearnId).PronunciationPath)));
+
+            Mapper mapper = new Mapper(config);
+            List<ItemWithTranslation> wordsWithTranslations =
+                mapper.Map<List<Word>, List<ItemWithTranslation>>(wordsBySubCategory);
+
+            return wordsWithTranslations;
         }
     }
 }
